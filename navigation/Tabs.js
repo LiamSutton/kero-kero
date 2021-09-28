@@ -12,14 +12,24 @@ const Tabs = () => {
     return (
         <Tab.Navigator screenOptions={{
             tabBarStyle: {
-                backgroundColor: '#6103EE'
+                backgroundColor: Styles.darkTheme.backgroundColor,
+                borderTopWidth: 0 // removes white line
+            },
+            headerStyle: {
+                backgroundColor: Styles.darkTheme.backgroundColor,
+                shadowRadius: 0, // removes white line
+                shadowOffset: {
+                    height: 0
+                },
+            },
+            headerTitleStyle: {
+                color: '#FFFFFF'
             }
         
         }}>
             <Tab.Screen 
                 name="Home" 
                 component={HomeScreen}
-                
                 options={{
                     tabBarShowLabel: false,
                     tabBarIcon: ({focused}) => {
@@ -33,7 +43,7 @@ const Tabs = () => {
             />
 
             <Tab.Screen 
-                name="SearchScreen" 
+                name="Search Screen" 
                 component={SearchScreen} 
                 options={{
                     tabBarShowLabel: false,
@@ -48,7 +58,7 @@ const Tabs = () => {
             />
 
             <Tab.Screen 
-                name="NewBook" 
+                name="New Book" 
                 component={NewBookScreen} 
                 options={{
                     tabBarShowLabel: false,
@@ -66,12 +76,19 @@ const Tabs = () => {
 }
 
 const Styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
     tabFocused: {
         color: 'white',
     },
 
     tabUnfocused: {
-        color: '#7E3FF2',
+        color: '#00227b',
     },
+
+    darkTheme: {
+        backgroundColor: '#3949ab'
+    }
 })
 export default Tabs;
