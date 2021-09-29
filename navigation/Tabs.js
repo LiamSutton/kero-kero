@@ -16,7 +16,7 @@ const Tabs = () => {
                 borderTopWidth: 0 // removes white line
             },
             headerStyle: {
-                backgroundColor: Styles.darkTheme.backgroundColor,
+                backgroundColor: '#002f6c',
                 shadowRadius: 0, // removes white line
                 shadowOffset: {
                     height: 0
@@ -24,7 +24,7 @@ const Tabs = () => {
             },
             headerTitleStyle: {
                 color: '#FFFFFF'
-            }
+            },
         
         }}>
             <Tab.Screen 
@@ -88,7 +88,7 @@ const Styles = StyleSheet.create({
     },
 
     darkTheme: {
-        backgroundColor: '#3949ab'
+        backgroundColor: '#01579b'
     }
 })
 export default Tabs;

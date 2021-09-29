@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet } from 'react-native'
+import { SafeAreaView, Button, StyleSheet } from 'react-native'
 import { Text, View } from 'react-native'
 
 const HomeScreen = () => {
@@ -11,7 +11,6 @@ const HomeScreen = () => {
         </SafeAreaView>
     )
 }
-
 
 const Styles = StyleSheet.create({
     containerDark: {
