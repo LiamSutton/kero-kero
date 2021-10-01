@@ -4,17 +4,13 @@ import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet } from 'react-native'
 
-const NewBookScreen = ({navigation}) => {
+const NewBookScreen = ({ route, navigation}) => {
+    const { isbn } = route.params
     return(
         <SafeAreaView style={Styles.containerDark}>
             <Text style={Styles.textDark}>
-                Hello from the New Book Screen!
+                Barcode ISBN: {isbn}
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Search Screen")} style={Styles.touchableButton}>
-                <Text style={Styles.textDark}>
-                    Scan <Ionicons name="camera" color="white" size={25}/>
-                </Text>
-            </TouchableOpacity>
         </SafeAreaView>
     )
 }

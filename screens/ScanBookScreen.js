@@ -1,9 +1,9 @@
-import React , { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, StyleSheet, View, Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 
-const ScanBookScreen = ({navigation}) => {
+const ScanBookScreen = ({ navigation }) => {
     const [hasPermission, setHasPermission] = useState(null)
     const [scanned, setScanned] = useState(false)
 
@@ -16,7 +16,10 @@ const ScanBookScreen = ({navigation}) => {
 
     const handleBarcodeScanned = ({ type, data }) => {
         setScanned(true)
-        navigation.navigate("New Book")
+        navigation.navigate("New Book", {
+            // route params
+            isbn: data
+        })
     }
 
     if (hasPermission === null) {
@@ -27,7 +30,7 @@ const ScanBookScreen = ({navigation}) => {
         return <Text>No access to camera</Text>
     }
 
-    return(
+    return (
         <View style={Styles.containerDark}>
             <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarcodeScanned}
