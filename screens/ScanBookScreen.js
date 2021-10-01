@@ -1,8 +1,9 @@
 import React , { useState, useEffect } from 'react'
 import { Button, StyleSheet, View, Text } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 
-const ScanBookScreen = () => {
+const ScanBookScreen = ({navigation}) => {
     const [hasPermission, setHasPermission] = useState(null)
     const [scanned, setScanned] = useState(false)
 
@@ -15,7 +16,7 @@ const ScanBookScreen = () => {
 
     const handleBarcodeScanned = ({ type, data }) => {
         setScanned(true)
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`)
+        navigation.navigate("New Book")
     }
 
     if (hasPermission === null) {

@@ -26,52 +26,68 @@ const Tabs = () => {
             headerTitleStyle: {
                 color: '#FFFFFF'
             },
-        
+
         }}>
-            <Tab.Screen 
-                name="Home" 
+            <Tab.Screen
+                name="Home"
                 component={HomeScreen}
                 options={{
                     tabBarShowLabel: false,
-                    tabBarIcon: ({focused}) => {
-                    return <Ionicons 
-                            name={'home'} 
-                            size={25} 
+                    tabBarIcon: ({ focused }) => {
+                        return <Ionicons
+                            name={'home'}
+                            size={25}
                             color={focused ? Styles.tabFocused.color : Styles.tabUnfocused.color}
-                            />;
+                        />;
                     }
                 }}
             />
 
-            <Tab.Screen 
-                name="Search Screen" 
-                component={SearchScreen} 
+            <Tab.Screen
+                name="Search Screen"
+                component={SearchScreen}
                 options={{
                     tabBarShowLabel: false,
-                    tabBarIcon: ({focused}) => {
-                    return <Ionicons 
-                            name={'search'} 
-                            size={25} 
+                    tabBarIcon: ({ focused }) => {
+                        return <Ionicons
+                            name={'search'}
+                            size={25}
                             color={focused ? Styles.tabFocused.color : Styles.tabUnfocused.color}
-                            />;
+                        />;
                     }
                 }}
             />
 
-            <Tab.Screen 
-                name="Scan Book" 
-                component={ScanBookScreen} 
+            <Tab.Screen
+                name="New Book"
+                component={NewBookScreen}
                 options={{
                     tabBarShowLabel: false,
-                    tabBarIcon: ({focused}) => {
-                    return <Ionicons style={{}}
-                            name={'camera'} 
-                            size={25} 
-                            color={focused ? Styles.tabFocused.color : Styles.tabUnfocused.color} 
-                            />;
+                    tabBarIcon: ({ focused }) => {
+                        return <Ionicons style={{}}
+                            name={'book'}
+                            size={25}
+                            color={focused ? Styles.tabFocused.color : Styles.tabUnfocused.color}
+                        />;
                     }
                 }}
             />
+
+            <Tab.Screen
+                name="Scan Book"
+                component={ScanBookScreen}
+                options={{
+                    tabBarShowLabel: false,
+                    tabBarIcon: ({ focused }) => {
+                        return <Ionicons style={{}}
+                            name={'camera'}
+                            size={25}
+                            color={focused ? Styles.tabFocused.color : Styles.tabUnfocused.color}
+                        />;
+                    }
+                }}
+            />
+
         </Tab.Navigator>
     )
 }
