@@ -20,6 +20,8 @@ const NewBookScreen = ({ route, navigation}) => {
             {
                 isLoading ? <Text>Loading...</Text> :
                 <View style={Styles.containerDark}>
+                     <Image style={Styles.bookThumbnail} source={{uri: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`}}>
+                    </Image>
                     <Text style={Styles.textDark}>
                         Title: {data.items[0].volumeInfo.title}
                     </Text>
@@ -29,8 +31,6 @@ const NewBookScreen = ({ route, navigation}) => {
                     <Text style={Styles.textDark}>
                         Date Published: {data.items[0].volumeInfo.publishedDate}
                     </Text>
-                    <Image style={Styles.bookThumbnail} source={{uri: data.items[0].volumeInfo.imageLinks.thumbnail}}>
-                    </Image>
                 </View>
             }
         </SafeAreaView>
@@ -40,29 +40,21 @@ const NewBookScreen = ({ route, navigation}) => {
 const Styles = StyleSheet.create({
     containerDark: {
         flex: 1,
-        alignItems: 'center',
         backgroundColor: '#1A1A1A',
+        alignItems: 'center'
     },
 
     textDark: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'white'
-    },
-
-    touchableButton: {
-        backgroundColor: '#01579b',
-        borderRadius: 100,
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 5,
-        paddingBottom: 5,
+        color: 'white',
     },
 
     bookThumbnail: {
         marginTop: 20,
-        height: 200,
-        width: 100,
+        height: 350,
+        width: 200,
+        resizeMode: 'contain'
     },
     
 })
