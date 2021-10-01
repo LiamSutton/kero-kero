@@ -5,7 +5,7 @@ const SearchScreen = () => {
     return(
         <SafeAreaView style={Styles.containerDark}>
             <Text style={Styles.textDark}>
-                Hello from the New Book Screen!
+                Hello from the Search Screen
             </Text>
         </SafeAreaView>
     )

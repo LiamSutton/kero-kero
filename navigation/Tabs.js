@@ -5,6 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import HomeScreen from '../screens/HomeScreen'
 import NewBookScreen from '../screens/NewBookScreen'
 import SearchScreen from '../screens/SearchScreen'
+import ScanBookScreen from '../screens/ScanBookScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -58,13 +59,13 @@ const Tabs = () => {
             />
 
             <Tab.Screen 
-                name="New Book" 
-                component={NewBookScreen} 
+                name="Scan Book" 
+                component={ScanBookScreen} 
                 options={{
                     tabBarShowLabel: false,
                     tabBarIcon: ({focused}) => {
                     return <Ionicons style={{}}
-                            name={'book'} 
+                            name={'camera'} 
                             size={25} 
                             color={focused ? Styles.tabFocused.color : Styles.tabUnfocused.color} 
                             />;
