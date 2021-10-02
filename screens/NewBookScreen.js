@@ -1,8 +1,9 @@
 import React, { useState, useEffect} from 'react'
-import { SafeAreaView, Text, Image, View} from 'react-native'
+import { SafeAreaView, Text, Image, View, TouchableOpacity} from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet } from 'react-native'
+import { Button } from 'react-native-elements/dist/buttons/Button'
 
 const NewBookScreen = ({ route, navigation}) => {
     const { isbn } = route.params
@@ -19,7 +20,7 @@ const NewBookScreen = ({ route, navigation}) => {
         <SafeAreaView style={Styles.containerDark}>
             {
                 isLoading ? <Text>Loading...</Text> :
-                <View style={Styles.containerDark}>
+                <View style={Styles.cardItemDark}>
                      <Image style={Styles.bookThumbnail} source={{uri: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`}}>
                     </Image>
                     <Text style={Styles.textDark}>
@@ -33,6 +34,9 @@ const NewBookScreen = ({ route, navigation}) => {
                     </Text>
                 </View>
             }
+            <TouchableOpacity style={Styles.touchableButton}>
+                <Text style={Styles.textDark}>Add Book</Text>
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
@@ -40,9 +44,17 @@ const NewBookScreen = ({ route, navigation}) => {
 const Styles = StyleSheet.create({
     containerDark: {
         flex: 1,
-        backgroundColor: '#1A1A1A',
+        backgroundColor: '#121212',
         alignItems: 'center'
     },
+
+    cardItemDark: {
+        marginTop: 25,
+        backgroundColor: '#212121',
+        alignItems: 'center',
+        height: 500,
+        width: '90%'
+    },  
 
     textDark: {
         fontSize: 20,
@@ -55,6 +67,16 @@ const Styles = StyleSheet.create({
         height: 350,
         width: 200,
         resizeMode: 'contain'
+    },
+
+    touchableButton: {
+        backgroundColor: '#01579b',
+        borderRadius: 15,
+        marginTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
     },
     
 })
