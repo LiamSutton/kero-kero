@@ -102,6 +102,26 @@ export const getGenreByName = (name) => {
     })
 }
 
+export const insertGenre = (name) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "INSERT INTO genres (name) VALUES (?)",
+                [name],
+                (tx, results) => {
+                    let response = null
+                    if (results.insertId != null) {
+                        response = results.insertId
+                    }
+                    resolve(response)
+                },
+                (tx, error) => console.error(error)
+            )
+        })
+    })
+}
+
 //#endregion
 
 //#region AUTHORS
@@ -127,6 +147,26 @@ export const getAuthorByName = (name) => {
                 "SELECT * FROM authors WHERE name = ?",
                 [name],
                 (tx, results) => resolve(results._array[0]),
+                (tx, error) => console.error(error)
+            )
+        })
+    })
+}
+
+export const insertAuthor = (name) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "INSERT INTO authors (name) VALUES (?)",
+                [name],
+                (tx, results) => {
+                    let response = null
+                    if (results.insertId != null) {
+                        response = results.insertId
+                    }
+                    resolve(response)
+                },
                 (tx, error) => console.error(error)
             )
         })
