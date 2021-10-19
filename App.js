@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
-import Tabs from './navigation/Tabs'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import Tabs from './navigation/Tabs'
+import { createGenresTable, dropAuthorsTable, getAllGenres, getGenreByName } from './database/db'
+
 
 const App = () => {
+  
   return(
     <SafeAreaProvider>
     <NavigationContainer>
