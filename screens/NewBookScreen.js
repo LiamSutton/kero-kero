@@ -6,11 +6,12 @@ import { StyleSheet } from 'react-native'
 import { Button } from 'react-native-elements/dist/buttons/Button'
 
 const NewBookScreen = ({ route, navigation}) => {
-    const { isbn } = route.params
+    // const { isbn } = route.params
+    const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     useEffect(() => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
         .then((response) => response.json())
         .then((json) => setData(json))
         .catch((error) => console.error(error))
@@ -21,16 +22,16 @@ const NewBookScreen = ({ route, navigation}) => {
             {
                 isLoading ? <Text>Loading...</Text> :
                 <View style={Styles.cardItemDark}>
-                     <Image style={Styles.bookThumbnail} source={{uri: `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`}}>
+                     <Image style={Styles.bookThumbnail} source={{uri: `https://covers.openlibrary.org/b/isbn/${debugISBN}-L.jpg`}}>
                     </Image>
                     <Text style={Styles.textDark}>
-                        Title: {data.items[0].volumeInfo.title}
+                        {data.items[0].volumeInfo.title}
                     </Text>
                     <Text style={Styles.textDark}>
-                        Author: {data.items[0].volumeInfo.authors}
+                        {data.items[0].volumeInfo.authors}
                     </Text>
                     <Text style={Styles.textDark}>
-                        Date Published: {data.items[0].volumeInfo.publishedDate}
+                        {data.items[0].volumeInfo.publishedDate}
                     </Text>
                 </View>
             }
