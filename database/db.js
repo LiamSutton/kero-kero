@@ -66,6 +66,32 @@ export const dropAuthorsTable = () => {
         })
     })
 }
+
+export const dropGenresTable = () => {
+    return new Promise(() => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "DROP TABLE genres",
+                [],
+                (tx, results) => console.log("[INFO]: Dropped Table: genres")
+            )
+        })
+    })
+}
+
+export const dropBooksTable = () => {
+    return new Promise(() => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "DROP TABLE books",
+                [],
+                (tx, results) => console.log("[INFO]: Dropped Table: books")
+            )
+        })
+    })
+}
 //#endregion
 
 //#region GENRES
@@ -78,6 +104,7 @@ export const getAllGenres = () => {
                 "SELECT * FROM genres",
                 [],
                 (tx, results) => {
+                    console.log(results)
                     resolve(results.rows._array)
                 },
                 (tx, error) => console.error(error)
@@ -132,7 +159,13 @@ export const getAllAuthors = () => {
             tx.executeSql(
                 "SELECT * FROM authors",
                 [],
-                (tx, results) => resolve(results._array),
+                (tx, results) => {
+                    let response = null
+                    if (results.rows.length != 0) {
+                        response = results.rows._array
+                    }
+                    resolve(response)
+                },
                 (tx, error) => console.error(error)
             )
         })
@@ -146,7 +179,13 @@ export const getAuthorByName = (name) => {
             tx.executeSql(
                 "SELECT * FROM authors WHERE name = ?",
                 [name],
-                (tx, results) => resolve(results._array[0]),
+                (tx, results) => {
+                    let response = null
+                    if (results.rows.length != 0) {
+                        // response = results.rows._array[0]
+                    }
+                    resolve(response)
+                },
                 (tx, error) => console.error(error)
             )
         })

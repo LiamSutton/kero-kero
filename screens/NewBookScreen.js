@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet } from 'react-native'
 import { Button } from 'react-native-elements/dist/buttons/Button'
+import { getAllAuthors, getAllGenres, getAuthorByName, insertAuthor } from '../database/db'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
@@ -17,6 +18,15 @@ const NewBookScreen = ({ route, navigation}) => {
         .catch((error) => console.error(error))
         .finally(() => setIsLoading(false))
     }, []);
+
+    const addBook = async () => {
+        const authorName = data.items[0].volumeInfo.authors[0]
+        let authorId = await getAuthorByName(authorName)
+        if (authorId == null) {
+            authorId = await insertAuthor(authorName)
+        }
+        
+    }
     return(
         <SafeAreaView style={Styles.containerDark}>
             {
@@ -35,7 +45,7 @@ const NewBookScreen = ({ route, navigation}) => {
                     </Text>
                 </View>
             }
-            <TouchableOpacity style={Styles.touchableButton}>
+            <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
                 <Text style={Styles.textDark}>Add Book</Text>
             </TouchableOpacity>
         </SafeAreaView>
