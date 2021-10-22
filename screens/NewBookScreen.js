@@ -1,31 +1,44 @@
 import React, { useState, useEffect} from 'react'
 import { SafeAreaView, Text, Image, View, TouchableOpacity} from 'react-native'
+import { Picker } from '@react-native-picker/picker'
 import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet } from 'react-native'
 import { Button } from 'react-native-elements/dist/buttons/Button'
 import { getAllAuthors, getAllGenres, getAuthorByName, insertAuthor } from '../database/db'
+import dayjs from 'dayjs'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
     const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
+    const [genre, setGenre] = useState()
+    const [genreList, setGenreList] = useState([{id: '-1', name: 'Unknown'}])
     useEffect(() => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
         .then((response) => response.json())
         .then((json) => setData(json))
         .catch((error) => console.error(error))
-        .finally(() => setIsLoading(false))
+        .finally(async() => {
+            const list = await getAllGenres()
+            setGenreList(list)
+            setIsLoading(false)
+        })
     }, []);
 
     const addBook = async () => {
+        const title = data.items[0].volumeInfo.title
         const authorName = data.items[0].volumeInfo.authors[0]
+        const genreID = genre
         let authorId = await getAuthorByName(authorName)
         if (authorId == null) {
             authorId = await insertAuthor(authorName)
         }
-        
+        const bookISBN = debugISBN
+        const datePublished = data.items[0].volumeInfo.publishedDate;
+        const dateCreated = dayjs()
+        const cover = `https://covers.openlibrary.org/b/isbn/${bookISBN}-L.jpg`
     }
     return(
         <SafeAreaView style={Styles.containerDark}>
@@ -43,6 +56,14 @@ const NewBookScreen = ({ route, navigation}) => {
                     <Text style={Styles.textDark}>
                         {data.items[0].volumeInfo.publishedDate}
                     </Text>
+
+                    <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
+                        {
+                            genreList.map((item, index) => {
+                                return <Picker.Item label={item.name} value={item.id} key={item.id}/>
+                            })
+                        }
+                    </Picker>
                 </View>
             }
             <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
@@ -75,8 +96,8 @@ const Styles = StyleSheet.create({
 
     bookThumbnail: {
         marginTop: 20,
-        height: 350,
-        width: 200,
+        height: 200,
+        width: 150,
         resizeMode: 'contain'
     },
 
@@ -90,6 +111,16 @@ const Styles = StyleSheet.create({
         paddingBottom: 5,
     },
     
+    genrePicker: {
+        flex: 1,
+        alignItems: 'center',
+        width: '100%',
+        backgroundColor: '#FFFFFF',
+    },
+
+    genrePickerItem: {
+        color: '#000000',
+    }
 })
 
 const NavigateToHome = () => {

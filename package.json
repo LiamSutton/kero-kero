@@ -8,9 +8,11 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-picker/picker": "1.16.1",
     "@react-navigation/bottom-tabs": "^6.0.7",
     "@react-navigation/material-bottom-tabs": "^6.0.7",
     "@react-navigation/native": "^6.0.4",
+    "dayjs": "^1.10.7",
     "expo": "~42.0.1",
     "expo-barcode-scanner": "~10.2.2",
     "expo-sqlite": "^9.2.1",

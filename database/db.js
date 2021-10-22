@@ -2,6 +2,14 @@ import { openDatabase } from "expo-sqlite";
 
 const databaseName = "kerokero.db";
 
+const genres = [
+    "Action", "Adult Fantasy", "Adventure", "Autobiography", "Biography", "Childrens",
+    "Classics", "Comedy", "Cookbook", "Dark Fantasy", "Detective", "Dystopian",
+    "Educational", "Fantasy", "Fiction", "Graphic Novel", "Historical Fiction",
+    "History", "Horror", "Manga", "Poetry", "Romance", "Science Fiction",
+    "Self-Help", "Short Stories"
+]
+
 const getConnection = () => {
     const databaseConnection = openDatabase(databaseName)
     return databaseConnection
@@ -20,6 +28,14 @@ export const createGenresTable = () => {
             (tx, results) => console.log("[INFO]: Created Table: genres"),
             (tx, error) => console.error(error)
         })
+    })
+}
+
+export const populateGenresTable = () => {
+    return new Promise(() => {
+        for (let i = 0; i < genres.length; i++) {
+            insertGenre(genres[i])
+        }
     })
 }
 
@@ -104,7 +120,6 @@ export const getAllGenres = () => {
                 "SELECT * FROM genres",
                 [],
                 (tx, results) => {
-                    console.log(results)
                     resolve(results.rows._array)
                 },
                 (tx, error) => console.error(error)
@@ -182,7 +197,7 @@ export const getAuthorByName = (name) => {
                 (tx, results) => {
                     let response = null
                     if (results.rows.length != 0) {
-                        // response = results.rows._array[0]
+                         response = results.rows._array[0]
                     }
                     resolve(response)
                 },
