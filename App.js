@@ -11,7 +11,6 @@ const App = () => {
       createAuthorsTable()
       createGenresTable()
       createBooksTable()
-      populateGenresTable()
     })()
   }, [])
   return(

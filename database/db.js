@@ -58,7 +58,7 @@ export const createBooksTable = () => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT NOT NULL UNIQUE, datePublished DATE NOT NULL, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL)",
+                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT NOT NULL UNIQUE, datePublished DATETIME NOT NULL, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL)",
                 [],
                 (tx, results) => console.log("[INFO]: Created Table: books"),
                 (tx, error) => console.error(error)
@@ -192,12 +192,12 @@ export const getAuthorByName = (name) => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "SELECT * FROM authors WHERE name = ?",
+                "SELECT id FROM authors WHERE name = ?",
                 [name],
                 (tx, results) => {
                     let response = null
                     if (results.rows.length != 0) {
-                         response = results.rows._array[0]
+                         response = results.rows._array[0].id
                     }
                     resolve(response)
                 },
@@ -229,6 +229,45 @@ export const insertAuthor = (name) => {
 //#endregion
 
 //#region BOOKS
+export const getBookByISBN = (isbn) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "SELECT id FROM books WHERE isbn = ?",
+                [isbn],
+                (tx, results) => {
+                    let response = null
+                    if (results.rows.length != 0) {
+                        response = results.rows._array[0]
+                    }
+                    resolve(response)
+                },
+                (tx, error) => console.error(error)
+            )
+        })
+    })
+}
 
+export const insertBook = (title, authorId, genreId, isbn, datePublished, dateCreated, cover) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "INSERT INTO books (title, authorId, genreId, isbn, datePublished, dateCreated, cover) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [title, authorId, genreId, isbn, datePublished, dateCreated, cover],
+                (tx, results) => {
+                    console.log(tx)
+                    let response = null
+                    if (results.insertId != null) {
+                        response = results.insertId
+                    }
+                    resolve(response)
+                },
+                (tx, error) => console.log(error)
+            )
+        })
+    })
+}
 //#endregion
 

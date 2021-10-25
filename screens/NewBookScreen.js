@@ -5,12 +5,12 @@ import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StyleSheet } from 'react-native'
 import { Button } from 'react-native-elements/dist/buttons/Button'
-import { getAllAuthors, getAllGenres, getAuthorByName, insertAuthor } from '../database/db'
+import { getAllAuthors, getAllGenres, getAuthorByName, getBookByISBN, insertAuthor, insertBook } from '../database/db'
 import dayjs from 'dayjs'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '1423131975' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
@@ -32,13 +32,24 @@ const NewBookScreen = ({ route, navigation}) => {
         const authorName = data.items[0].volumeInfo.authors[0]
         const genreID = genre
         let authorId = await getAuthorByName(authorName)
+    
         if (authorId == null) {
             authorId = await insertAuthor(authorName)
         }
+
         const bookISBN = debugISBN
         const datePublished = data.items[0].volumeInfo.publishedDate;
-        const dateCreated = dayjs()
+        const dateCreated = dayjs().format("YYYY-MM-DD")
         const cover = `https://covers.openlibrary.org/b/isbn/${bookISBN}-L.jpg`
+
+        let bookId = await getBookByISBN(bookISBN)
+        console.log(bookId)
+        if (bookId == null) {
+            const inserted = await insertBook(title, authorId, genreID, bookISBN, datePublished, dateCreated, cover);
+            console.log(inserted)
+        } else {
+            // todo: handle rejection when book already exists
+        }
     }
     return(
         <SafeAreaView style={Styles.containerDark}>
