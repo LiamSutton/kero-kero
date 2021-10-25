@@ -269,5 +269,22 @@ export const insertBook = (title, authorId, genreId, isbn, datePublished, dateCr
         })
     })
 }
+
+export const getAllBooks = () => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "SELECT * FROM books",
+                [],
+                (tx, results) => {
+                    let response = results.rows._array
+                    resolve(response)
+                },
+                (tx, error) => console.log(error)
+            )
+        })
+    })
+}
 //#endregion
 
