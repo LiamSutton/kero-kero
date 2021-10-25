@@ -275,10 +275,14 @@ export const getAllBooks = () => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "SELECT * FROM books",
+                `SELECT books.id, books.title, authors.name as 'author', genres.name as 'genre', books.cover
+                 FROM books
+                    JOIN authors on authors.id = books.authorId
+                    JOIN genres on genres.id = books.genreId`,
                 [],
                 (tx, results) => {
                     let response = results.rows._array
+                    console.log(response)
                     resolve(response)
                 },
                 (tx, error) => console.log(error)
