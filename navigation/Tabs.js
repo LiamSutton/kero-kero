@@ -33,13 +33,14 @@ const Tabs = () => {
                 component={HomeScreen}
                 options={{
                     tabBarShowLabel: false,
+                    unmountOnBlur: true, // force reload whenever user navigates away / to the screen
                     tabBarIcon: ({ focused }) => {
                         return <Ionicons
                             name={'home'}
                             size={25}
                             color={focused ? Styles.tabFocused.color : Styles.tabUnfocused.color}
                         />;
-                    }
+                    },
                 }}
             />
 

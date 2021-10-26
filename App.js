@@ -8,9 +8,14 @@ import { createAuthorsTable, createBooksTable, createGenresTable, dropAuthorsTab
 const App = () => {
   useEffect(() => {
     (async () => {
+      // dropBooksTable()
+      // dropAuthorsTable()
+      // dropGenresTable()
+
       createAuthorsTable()
       createGenresTable()
       createBooksTable()
+      // populateGenresTable() 
     })()
   }, [])
   return(

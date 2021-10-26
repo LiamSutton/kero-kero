@@ -7,7 +7,7 @@ const genres = [
     "Classics", "Comedy", "Cookbook", "Dark Fantasy", "Detective", "Dystopian",
     "Educational", "Fantasy", "Fiction", "Graphic Novel", "Historical Fiction",
     "History", "Horror", "Manga", "Poetry", "Romance", "Science Fiction",
-    "Self-Help", "Short Stories"
+    "Self-Help", "Short Stories", "Young Adult"
 ]
 
 const getConnection = () => {
@@ -262,6 +262,27 @@ export const insertBook = (title, authorId, genreId, isbn, datePublished, dateCr
                     if (results.insertId != null) {
                         response = results.insertId
                     }
+                    resolve(response)
+                },
+                (tx, error) => console.log(error)
+            )
+        })
+    })
+}
+
+export const getAllBooks = () => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                `SELECT books.id, books.title, authors.name as 'author', genres.name as 'genre', books.cover
+                 FROM books
+                    JOIN authors on authors.id = books.authorId
+                    JOIN genres on genres.id = books.genreId`,
+                [],
+                (tx, results) => {
+                    let response = results.rows._array
+                    console.log(response)
                     resolve(response)
                 },
                 (tx, error) => console.log(error)
