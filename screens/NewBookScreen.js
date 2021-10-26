@@ -18,7 +18,7 @@ const NewBookScreen = ({ route, navigation}) => {
     useEffect(() => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
         .then((response) => response.json())
-        .then((json) => setData(json))
+        .then((json) => setData(json.items[0].volumeInfo))
         .catch((error) => console.error(error))
         .finally(async() => {
             const list = await getAllGenres()
@@ -28,8 +28,8 @@ const NewBookScreen = ({ route, navigation}) => {
     }, []);
 
     const addBook = async () => {
-        const title = data.items[0].volumeInfo.title
-        const authorName = data.items[0].volumeInfo.authors[0]
+        const title = data.title
+        const authorName = data.authors[0]
         const genreID = genre
         let authorId = await getAuthorByName(authorName)
     
@@ -38,9 +38,9 @@ const NewBookScreen = ({ route, navigation}) => {
         }
 
         const bookISBN = debugISBN
-        const datePublished = data.items[0].volumeInfo.publishedDate;
+        const datePublished = data.publishedDate;
         const dateCreated = dayjs().format("YYYY-MM-DD")
-        const cover = data.items[0].volumeInfo.imageLinks.thumbnail
+        const cover = data.imageLinks.thumbnail
 
         let bookId = await getBookByISBN(bookISBN)
         console.log(bookId)
@@ -56,16 +56,16 @@ const NewBookScreen = ({ route, navigation}) => {
             {
                 isLoading ? <Text>Loading...</Text> :
                 <View style={Styles.cardItemDark}>
-                     <Image style={Styles.bookThumbnail} source={{uri: data.items[0].volumeInfo.imageLinks.thumbnail}}>
+                     <Image style={Styles.bookThumbnail} source={{uri: data.imageLinks.thumbnail}}>
                     </Image>
                     <Text style={Styles.textDark}>
-                        {data.items[0].volumeInfo.title}
+                        {data.title}
                     </Text>
                     <Text style={Styles.textDark}>
-                        {data.items[0].volumeInfo.authors}
+                        {data.authors}
                     </Text>
                     <Text style={Styles.textDark}>
-                        {data.items[0].volumeInfo.publishedDate}
+                        {data.publishedDate}
                     </Text>
 
                     <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
