@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, Button, StyleSheet } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { Text, View } from 'react-native'
 import BookList from '../components/BookList'
 import { getAllBooks } from '../database/db'
 
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
     const [isLoading, setIsLoading] = useState(true)
     const [bookList, setBookList] = useState([])
 
     useEffect(() => {
-         fetchBookList()
-    }, [])
+        if (navigation.isFocused()) {
+            fetchBookList()
+        }
+    }, [navigation.isFocused()])
     
     const fetchBookList = async () => {
         const books = await getAllBooks()

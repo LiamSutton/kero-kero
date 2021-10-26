@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '1423131975' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
@@ -40,7 +40,7 @@ const NewBookScreen = ({ route, navigation}) => {
         const bookISBN = debugISBN
         const datePublished = data.items[0].volumeInfo.publishedDate;
         const dateCreated = dayjs().format("YYYY-MM-DD")
-        const cover = `https://covers.openlibrary.org/b/isbn/${bookISBN}-L.jpg`
+        const cover = data.items[0].volumeInfo.imageLinks.thumbnail
 
         let bookId = await getBookByISBN(bookISBN)
         console.log(bookId)
@@ -56,7 +56,7 @@ const NewBookScreen = ({ route, navigation}) => {
             {
                 isLoading ? <Text>Loading...</Text> :
                 <View style={Styles.cardItemDark}>
-                     <Image style={Styles.bookThumbnail} source={{uri: `https://covers.openlibrary.org/b/isbn/${debugISBN}-L.jpg`}}>
+                     <Image style={Styles.bookThumbnail} source={{uri: data.items[0].volumeInfo.imageLinks.thumbnail}}>
                     </Image>
                     <Text style={Styles.textDark}>
                         {data.items[0].volumeInfo.title}

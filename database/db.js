@@ -7,7 +7,7 @@ const genres = [
     "Classics", "Comedy", "Cookbook", "Dark Fantasy", "Detective", "Dystopian",
     "Educational", "Fantasy", "Fiction", "Graphic Novel", "Historical Fiction",
     "History", "Horror", "Manga", "Poetry", "Romance", "Science Fiction",
-    "Self-Help", "Short Stories"
+    "Self-Help", "Short Stories", "Young Adult"
 ]
 
 const getConnection = () => {

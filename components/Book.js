@@ -8,8 +8,8 @@ const Book = (props) => {
     return(
         <View>
             <Text style={Styles.textDark}>{bookInfo.title}</Text>
-            <Text style={Styles.textDark}>{bookInfo.authorId}</Text>
-            <Text style={Styles.textDark}>{bookInfo.genreId}</Text>
+            <Text style={Styles.textDark}>{bookInfo.author}</Text>
+            <Text style={Styles.textDark}>{bookInfo.genre}</Text>
             <Image style={Styles.bookThumbmail} source={{uri: bookInfo.cover}}>
 
             </Image>
@@ -24,6 +24,10 @@ const Styles = StyleSheet.create({
         color: 'white'
     },
 
+    bookContainer: {
+
+    },
+    
     bookThumbmail: {
         height: 150,
         width: 100,
