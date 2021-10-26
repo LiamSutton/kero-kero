@@ -10,23 +10,35 @@ import dayjs from 'dayjs'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '1421580438' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '0007340478' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
     const [genreList, setGenreList] = useState([{id: '-1', name: 'Unknown'}])
+    
     useEffect(() => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
-        .then((response) => response.json())
-        .then((json) => setData(json.items[0].volumeInfo))
-        .catch((error) => console.error(error))
-        .finally(async() => {
-            const list = await getAllGenres()
-            setGenreList(list)
+        const setupScreen = async () => {
+            const bookDetails = await fetchBookDetails()
+            const genres = await populateGenreList()
             setIsLoading(false)
-        })
+        }
+        setupScreen()
     }, []);
 
+    const fetchBookDetails = async () => {
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+        .then((response) => response.json())
+        .then((json) => {
+            setData(json.items[0].volumeInfo)
+        })
+        .catch((error) => console.log(error))
+    }
+
+    const populateGenreList = async () => {
+        const list = await getAllGenres()
+        setGenreList(list)
+    }
+    
     const addBook = async () => {
         const title = data.title
         const authorName = data.authors[0]
