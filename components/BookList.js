@@ -9,9 +9,10 @@ import Book from './Book'
 const BookList = (props) => {
     const books = props.books
     return(
-        <View>
+        <View style={Styles.container}>
             <FlatList 
                 data={books}
+                keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) => <Book bookInfo={item}/>}
             />
         </View>
@@ -22,6 +23,11 @@ const Styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
         color: 'white'
+    },
+
+    container: {
+        marginTop: 20,
+        marginBottom: 20,
     }
 })
 export default BookList

@@ -9,7 +9,7 @@ const Book = (props) => {
         <View style={Styles.bookContainer}>
             <Image style={Styles.bookThumbmail} source={{uri: bookInfo.cover}} />
             <View style={Styles.bookTextContainer}>
-                <Text style={Styles.textDark}>{bookInfo.title}</Text>
+                <Text style={Styles.titleTextDark}>{bookInfo.title}</Text>
                 <Text style={Styles.textDark}>{bookInfo.author}</Text>
                 <Text style={Styles.textDark}>{bookInfo.genre}</Text>
             </View>
@@ -19,28 +19,32 @@ const Book = (props) => {
 
 const Styles = StyleSheet.create({
     textDark: {
-        fontSize: 12,
-        fontWeight: 'bold',
         color: 'white',
-        textAlign: 'center',
+    },
+
+    titleTextDark: {
+     fontSize: 14,
+     fontWeight: 'bold',
+     color: 'white',
     },
 
     bookContainer: {
         flexDirection: 'row',
-        marginTop: 10,
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10,
+        padding: 10,
         backgroundColor: 'gray'
     },
     
     bookTextContainer: {
-        marginLeft: 10,
-
+        marginLeft: 15,
+        flexShrink: 1,
     },
 
     bookThumbmail: {
         height: 150,
         width: 100,
-        marginLeft: 100,
-
     },
 })
 export default Book

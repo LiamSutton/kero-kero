@@ -25,10 +25,6 @@ const HomeScreen = ({navigation}) => {
 
     return(
         <SafeAreaView style={Styles.containerDark}>
-            <Text style={Styles.textDark}>
-                Hello from the Home screen!
-            </Text>
-
             {
                 isLoading ? 
                 <Text style={Styles.textDark}>Loading books...</Text> : 
