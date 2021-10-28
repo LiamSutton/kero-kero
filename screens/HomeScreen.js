@@ -38,7 +38,7 @@ const Styles = StyleSheet.create({
     containerDark: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#1A1A1A',
+        backgroundColor: '#121212',
     },
 
     textDark: {

@@ -10,8 +10,8 @@ import dayjs from 'dayjs'
 import Toast from 'react-native-root-toast'
 
 const NewBookScreen = ({ route, navigation}) => {
-    // const { isbn } = route.params
-    const debugISBN = '0439784549' // used when dont have access to / cant be bothered using scanner :)
+    const { isbn } = route.params
+    // const debugISBN = '1526634457' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
@@ -19,7 +19,7 @@ const NewBookScreen = ({ route, navigation}) => {
     
     useEffect(() => {
         const setupScreen = async () => {
-            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
             .then((response) => response.json())
             .then((json) => {
                 setData(json.items[0].volumeInfo)
@@ -33,7 +33,7 @@ const NewBookScreen = ({ route, navigation}) => {
     }, []);
 
     const fetchBookDetails = async () => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
         .then((response) => response.json())
         .then((json) => {
             setData(json.items[0].volumeInfo)
@@ -51,16 +51,17 @@ const NewBookScreen = ({ route, navigation}) => {
         let book = await prepareBook()
         if (book != null) {
         const bookId = await insertBook(book)
-        let toast = Toast.show(bookId == null ? "Unable to add book." : "Book added to your Library 🥳", {duration: Toast.durations.SHORT})
+        let toast = Toast.show(bookId != null ? "Book added to your library. 🥳" : "Unable to add book to your library. 😔",
+            {duration: Toast.durations.SHORT})
         } else {
-            let toast = Toast.show("This book is already in your Library.", {duration: Toast.durations.SHORT})
+            let toast = Toast.show("This book is already in your library? 🤔", 
+            {duration: Toast.durations.SHORT})
         }
     }
 
     const prepareBook = async () => {
-        let bookId = await getBookByISBN(debugISBN);
+        let bookId = await getBookByISBN(isbn);
         if (bookId != null) {
-            console.log("[INFO]: Book with this isbn already exists in the Library.")
             return null
         }
         const authorName = data.authors[0]
@@ -73,7 +74,7 @@ const NewBookScreen = ({ route, navigation}) => {
             title: data.title,
             authorId: authorId,
             genreId: genre,
-            isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
+            isbn: isbn, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
             cover: data.imageLinks.thumbnail
@@ -92,21 +93,30 @@ const NewBookScreen = ({ route, navigation}) => {
         <SafeAreaView style={Styles.containerDark}>
             {
                 isLoading ? <Text>Loading...</Text> :
-                <View style={Styles.cardItemDark}>
-                     <Image style={Styles.bookThumbnail} source={{uri: data.imageLinks.thumbnail}}>
-                    </Image>
-                    <Text style={Styles.textDark}>
-                        {data.title}
-                    </Text>
-                    <Text style={Styles.textDark}>
-                        {data.authors}
-                    </Text>
-                    <Text style={Styles.textDark}>
-                        {data.publishedDate}
-                    </Text>
+                <View style={Styles.bookContainer}>
+                    <Image 
+                        style={Styles.bookThumbnail}
+                        source={{uri: data.imageLinks.thumbnail}}
+                    />
+                    <View style={Styles.bookTextContainer}>
+                        <Text style={Styles.titleTextDark}>
+                            {data.title}
+                        </Text>
+                        <Text style={Styles.textDark}>
+                            {data.authors}
+                        </Text>
+                        <Text style={Styles.textDark}>
+                            {dayjs(data.publishedDate).format("DD/MM/YYYY")}
+                        </Text>
+                    </View>
+                </View>
+            }
 
-                    <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
-                        {
+            {
+                isLoading ? <Text>Loading Genres...</Text> :
+                <View style={Styles.genrePickerContainer}>
+                  <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
+                         {
                             genreList.map((item, index) => {
                                 return <Picker.Item label={item.name} value={item.id} key={item.id}/>
                             })
@@ -114,8 +124,9 @@ const NewBookScreen = ({ route, navigation}) => {
                     </Picker>
                 </View>
             }
+            
             <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
-                <Text style={Styles.textDark}>Add Book</Text>
+                <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center', paddingTop: 5}}>Add Book</Text>
             </TouchableOpacity>
         </SafeAreaView>
     )
@@ -125,49 +136,64 @@ const Styles = StyleSheet.create({
     containerDark: {
         flex: 1,
         backgroundColor: '#121212',
-        alignItems: 'center'
     },
 
-    cardItemDark: {
-        marginTop: 25,
-        backgroundColor: '#212121',
-        alignItems: 'center',
-        height: 500,
-        width: '90%'
-    },  
+    bookContainer: {
+        flexDirection: 'row',
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10,
+        padding: 10,
+        backgroundColor: '#212121'
+    },
 
-    textDark: {
-        fontSize: 20,
+    bookTextContainer: {
+        marginTop: 50,
+        marginLeft: 15,
+        flexShrink: 1,
+    },
+
+    titleTextDark: {
+        fontSize: 16,
         fontWeight: 'bold',
         color: 'white',
     },
 
+    textDark: {
+        color: 'white',
+    },
     bookThumbnail: {
-        marginTop: 20,
         height: 200,
         width: 150,
-        resizeMode: 'contain'
     },
 
     touchableButton: {
+        width: 200,
+        height: 40,
         backgroundColor: '#01579b',
-        borderRadius: 15,
+        borderRadius: 100,
         marginTop: 20,
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 5,
+        alignSelf: 'center',
     },
     
+    genrePickerContainer: {
+        marginTop: 25,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#212121',
+    },
+
     genrePicker: {
-        flex: 1,
-        alignItems: 'center',
-        width: '100%',
-        backgroundColor: '#FFFFFF',
+        color: 'white',
+        height: 50
     },
 
     genrePickerItem: {
-        color: '#000000',
+        
     }
 })
 
