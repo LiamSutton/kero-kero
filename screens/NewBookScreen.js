@@ -7,10 +7,11 @@ import { StyleSheet } from 'react-native'
 import { Button } from 'react-native-elements/dist/buttons/Button'
 import { getAllAuthors, getAllGenres, getAuthorByName, getBookByISBN, insertAuthor, insertBook } from '../database/db'
 import dayjs from 'dayjs'
+import Toast from 'react-native-root-toast'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '1784288608' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '0439784549' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
@@ -50,8 +51,9 @@ const NewBookScreen = ({ route, navigation}) => {
         let book = await prepareBook()
         if (book != null) {
         const bookId = await insertBook(book)
+        let toast = Toast.show(bookId == null ? "Unable to add book." : "Book added to your Library 🥳", {duration: Toast.durations.SHORT})
         } else {
-            console.log("Book returned null, must already exist.")
+            let toast = Toast.show("This book is already in your Library.", {duration: Toast.durations.SHORT})
         }
     }
 

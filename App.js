@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Tabs from './navigation/Tabs'
 import { createAuthorsTable, createBooksTable, createGenresTable, dropAuthorsTable, dropBooksTable, dropGenresTable, getAllGenres, populateGenresTable } from './database/db'
-
+import { RootSiblingParent } from 'react-native-root-siblings'
 
 const App = () => {
   useEffect(() => {
@@ -19,11 +19,13 @@ const App = () => {
     })()
   }, [])
   return(
-    <SafeAreaProvider>
-    <NavigationContainer>
-      <Tabs />
-    </NavigationContainer>
-    </SafeAreaProvider>
+    <RootSiblingParent>
+      <SafeAreaProvider>
+      <NavigationContainer>
+        <Tabs />
+      </NavigationContainer>
+      </SafeAreaProvider>
+    </RootSiblingParent>
   )
 }
 
