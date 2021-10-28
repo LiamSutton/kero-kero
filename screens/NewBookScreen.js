@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '0007340478' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '1784288608' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
@@ -18,9 +18,15 @@ const NewBookScreen = ({ route, navigation}) => {
     
     useEffect(() => {
         const setupScreen = async () => {
-            const bookDetails = await fetchBookDetails()
-            const genres = await populateGenreList()
-            setIsLoading(false)
+            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+            .then((response) => response.json())
+            .then((json) => {
+                setData(json.items[0].volumeInfo)
+            }).finally(async() => {
+                const list = await getAllGenres()
+                setGenreList(list)
+                setIsLoading(false)
+            })
         }
         setupScreen()
     }, []);
@@ -37,31 +43,48 @@ const NewBookScreen = ({ route, navigation}) => {
     const populateGenreList = async () => {
         const list = await getAllGenres()
         setGenreList(list)
+        setIsLoading(false)
     }
-    
+
     const addBook = async () => {
-        const title = data.title
+        let book = await prepareBook()
+        if (book != null) {
+        const bookId = await insertBook(book)
+        } else {
+            console.log("Book returned null, must already exist.")
+        }
+    }
+
+    const prepareBook = async () => {
+        let bookId = await getBookByISBN(debugISBN);
+        if (bookId != null) {
+            console.log("[INFO]: Book with this isbn already exists in the Library.")
+            return null
+        }
         const authorName = data.authors[0]
-        const genreID = genre
+        console.log(authorName)
+        let authorId = await handleAuthor(authorName)
+        console.log(authorId);
+        const dateCreated = dayjs().format("YYYY-MM-DD")
+        console.log("BOOK DATA: ")
+        let book = {
+            title: data.title,
+            authorId: authorId,
+            genreId: genre,
+            isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
+            datePublished: data.publishedDate,
+            dateCreated: dateCreated,
+            cover: data.imageLinks.thumbnail
+        }
+        return book
+    }
+
+    const handleAuthor = async (authorName) => {
         let authorId = await getAuthorByName(authorName)
-    
         if (authorId == null) {
             authorId = await insertAuthor(authorName)
         }
-
-        const bookISBN = debugISBN
-        const datePublished = data.publishedDate;
-        const dateCreated = dayjs().format("YYYY-MM-DD")
-        const cover = data.imageLinks.thumbnail
-
-        let bookId = await getBookByISBN(bookISBN)
-        console.log(bookId)
-        if (bookId == null) {
-            const inserted = await insertBook(title, authorId, genreID, bookISBN, datePublished, dateCreated, cover);
-            console.log(inserted)
-        } else {
-            // todo: handle rejection when book already exists
-        }
+        return authorId
     }
     return(
         <SafeAreaView style={Styles.containerDark}>

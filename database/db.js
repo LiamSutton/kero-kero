@@ -249,13 +249,13 @@ export const getBookByISBN = (isbn) => {
     })
 }
 
-export const insertBook = (title, authorId, genreId, isbn, datePublished, dateCreated, cover) => {
+export const insertBook = (book) => {
     return new Promise((resolve) => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
                 "INSERT INTO books (title, authorId, genreId, isbn, datePublished, dateCreated, cover) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [title, authorId, genreId, isbn, datePublished, dateCreated, cover],
+                [book.title, book.authorId, book.genreId, book.isbn, book.datePublished, book.dateCreated, book.cover],
                 (tx, results) => {
                     console.log(tx)
                     let response = null
@@ -282,7 +282,6 @@ export const getAllBooks = () => {
                 [],
                 (tx, results) => {
                     let response = results.rows._array
-                    console.log(response)
                     resolve(response)
                 },
                 (tx, error) => console.log(error)
