@@ -34,7 +34,7 @@ const Styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         padding: 10,
-        backgroundColor: 'gray'
+        backgroundColor: '#212121'
     },
     
     bookTextContainer: {
