@@ -64,6 +64,7 @@ const Tabs = () => {
                 component={NewBookScreen}
                 options={{
                     tabBarShowLabel: false,
+                    unmountOnBlur: true,
                     tabBarIcon: ({ focused }) => {
                         return <Ionicons style={{}}
                             name={'book'}

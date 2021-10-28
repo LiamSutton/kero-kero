@@ -10,62 +10,97 @@ import dayjs from 'dayjs'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '1421580438' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '1784288608' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
     const [genreList, setGenreList] = useState([{id: '-1', name: 'Unknown'}])
+    
     useEffect(() => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
-        .then((response) => response.json())
-        .then((json) => setData(json))
-        .catch((error) => console.error(error))
-        .finally(async() => {
-            const list = await getAllGenres()
-            setGenreList(list)
-            setIsLoading(false)
-        })
+        const setupScreen = async () => {
+            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+            .then((response) => response.json())
+            .then((json) => {
+                setData(json.items[0].volumeInfo)
+            }).finally(async() => {
+                const list = await getAllGenres()
+                setGenreList(list)
+                setIsLoading(false)
+            })
+        }
+        setupScreen()
     }, []);
 
+    const fetchBookDetails = async () => {
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+        .then((response) => response.json())
+        .then((json) => {
+            setData(json.items[0].volumeInfo)
+        })
+        .catch((error) => console.log(error))
+    }
+
+    const populateGenreList = async () => {
+        const list = await getAllGenres()
+        setGenreList(list)
+        setIsLoading(false)
+    }
+
     const addBook = async () => {
-        const title = data.items[0].volumeInfo.title
-        const authorName = data.items[0].volumeInfo.authors[0]
-        const genreID = genre
+        let book = await prepareBook()
+        if (book != null) {
+        const bookId = await insertBook(book)
+        } else {
+            console.log("Book returned null, must already exist.")
+        }
+    }
+
+    const prepareBook = async () => {
+        let bookId = await getBookByISBN(debugISBN);
+        if (bookId != null) {
+            console.log("[INFO]: Book with this isbn already exists in the Library.")
+            return null
+        }
+        const authorName = data.authors[0]
+        console.log(authorName)
+        let authorId = await handleAuthor(authorName)
+        console.log(authorId);
+        const dateCreated = dayjs().format("YYYY-MM-DD")
+        console.log("BOOK DATA: ")
+        let book = {
+            title: data.title,
+            authorId: authorId,
+            genreId: genre,
+            isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
+            datePublished: data.publishedDate,
+            dateCreated: dateCreated,
+            cover: data.imageLinks.thumbnail
+        }
+        return book
+    }
+
+    const handleAuthor = async (authorName) => {
         let authorId = await getAuthorByName(authorName)
-    
         if (authorId == null) {
             authorId = await insertAuthor(authorName)
         }
-
-        const bookISBN = debugISBN
-        const datePublished = data.items[0].volumeInfo.publishedDate;
-        const dateCreated = dayjs().format("YYYY-MM-DD")
-        const cover = data.items[0].volumeInfo.imageLinks.thumbnail
-
-        let bookId = await getBookByISBN(bookISBN)
-        console.log(bookId)
-        if (bookId == null) {
-            const inserted = await insertBook(title, authorId, genreID, bookISBN, datePublished, dateCreated, cover);
-            console.log(inserted)
-        } else {
-            // todo: handle rejection when book already exists
-        }
+        return authorId
     }
     return(
         <SafeAreaView style={Styles.containerDark}>
             {
                 isLoading ? <Text>Loading...</Text> :
                 <View style={Styles.cardItemDark}>
-                     <Image style={Styles.bookThumbnail} source={{uri: data.items[0].volumeInfo.imageLinks.thumbnail}}>
+                     <Image style={Styles.bookThumbnail} source={{uri: data.imageLinks.thumbnail}}>
                     </Image>
                     <Text style={Styles.textDark}>
-                        {data.items[0].volumeInfo.title}
+                        {data.title}
                     </Text>
                     <Text style={Styles.textDark}>
-                        {data.items[0].volumeInfo.authors}
+                        {data.authors}
                     </Text>
                     <Text style={Styles.textDark}>
-                        {data.items[0].volumeInfo.publishedDate}
+                        {data.publishedDate}
                     </Text>
 
                     <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
