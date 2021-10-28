@@ -12,6 +12,7 @@ import Book from './Book'
 const BookList = (props) => {
     const books = props.books
     const [modalVisible, setModalVisible] = useState(false)
+    const [selectedBook, setSelectedBook] = useState({})
     return(
         <View style={Styles.container}>
             <Modal
@@ -22,6 +23,12 @@ const BookList = (props) => {
             
             <View style={Styles.modalContainer}>
                 <Text>This is a modal!</Text>
+                <Text style={{color: 'white'}}>
+                    SELECTED ID: {selectedBook.id}
+                </Text>
+                <Text style={{color: 'white'}}>
+                    SELECTED TITLE: {selectedBook.title}
+                </Text>
                 <Pressable onPress={() => setModalVisible(!modalVisible)}><Text>Close Modal.</Text></Pressable>
             </View>
             </Modal>
@@ -31,7 +38,10 @@ const BookList = (props) => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) => {
                     return(
-                        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+                        <TouchableOpacity onPress={() => {
+                            setSelectedBook(item)
+                            setModalVisible(!modalVisible)
+                        }}>
                             <Book bookInfo={item} />
                         </TouchableOpacity>
                     )
