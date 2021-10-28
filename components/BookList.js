@@ -1,6 +1,7 @@
 import React from 'react'
 import { Text } from 'react-native'
 import { FlatList } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native'
 import { View } from 'react-native'
 import { StyleSheet } from 'react-native'
@@ -13,7 +14,13 @@ const BookList = (props) => {
             <FlatList 
                 data={books}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => <Book bookInfo={item}/>}
+                renderItem={({item}) => {
+                    return(
+                        <TouchableOpacity>
+                            <Book bookInfo={item} />
+                        </TouchableOpacity>
+                    )
+                }}
             />
         </View>
     )

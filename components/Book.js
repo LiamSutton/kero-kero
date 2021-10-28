@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native'
 const Book = (props) => {
     const bookInfo = props.bookInfo
     return(
-        <View style={Styles.bookContainer}>
+         <View style={Styles.bookContainer}>
             <Image style={Styles.bookThumbmail} source={{uri: bookInfo.cover}} />
             <View style={Styles.bookTextContainer}>
                 <Text style={Styles.titleTextDark}>{bookInfo.title}</Text>
