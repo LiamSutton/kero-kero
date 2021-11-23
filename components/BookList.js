@@ -7,12 +7,14 @@ import { SafeAreaView } from 'react-native'
 import { View } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Modal } from 'react-native'
+import { TextInput } from 'react-native'
 import Book from './Book'
 
 const BookList = (props) => {
     const books = props.books
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedBook, setSelectedBook] = useState({})
+    const [bookTitle, setBookTitle] = useState('')
     return(
         <View style={Styles.container}>
             <Modal
@@ -23,21 +25,29 @@ const BookList = (props) => {
             
                 <View style={Styles.modalContainer}>
                     <View style={Styles.bookInfoContainer}>
-                        <Text style={Styles.textDark}>
-                            SELECTED ID: {selectedBook.id}
-                        </Text>
-                        <Text style={Styles.textDark}>
-                            SELECTED TITLE: {selectedBook.title}
-                        </Text>
+                        <TextInput 
+                            style={Styles.textInputDark}
+                            onChangeText={(text) => {
+                                    setBookTitle(text)
+                                    console.log(bookTitle)
+                                }
+                            }
+                            value={bookTitle}>
+                        </TextInput>
                         <Text style={Styles.textDark}>
                             SELECTED AUTHOR: {selectedBook.author}
                         </Text>
                         <Text style={Styles.textDark}>
                             SELECTED GENRE: {selectedBook.genre}
                         </Text>
-                    <TouchableOpacity style={Styles.closeModalButton} onPress={() => setModalVisible(!modalVisible)}>
-                        <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Close Modal.</Text>
-                    </TouchableOpacity>
+                        <View style={Styles.modalButtonsContainer}>
+                            <TouchableOpacity style={Styles.closeModalButton} onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={Styles.saveChangesModalButton} onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Save Changes</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -49,6 +59,7 @@ const BookList = (props) => {
                     return(
                         <TouchableOpacity onPress={() => {
                             setSelectedBook(item)
+                            setBookTitle(item.title)
                             setModalVisible(!modalVisible)
                         }}>
                             <Book bookInfo={item} />
@@ -77,12 +88,39 @@ const Styles = StyleSheet.create({
         paddingBottom: 20,
     },
 
+    textInputDark: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+        color: 'white',
+        backgroundColor: '#181818'
+    },
+    modalButtonsContainer: {
+        flexDirection: 'row',
+        alignSelf: 'center'
+    },
+
     closeModalButton: {
-        width: 200,
+        width: 150,
+        height: 40,
+        backgroundColor: '#BA000D',
+        borderRadius: 15,
+        marginTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
+        alignSelf: 'center',
+    },
+
+    saveChangesModalButton: {
+        width: 150,
         height: 40,
         backgroundColor: '#01579b',
         borderRadius: 15,
         marginTop: 20,
+        marginLeft: 20,
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 5,
