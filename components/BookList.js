@@ -21,16 +21,25 @@ const BookList = (props) => {
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}>
             
-            <View style={Styles.modalContainer}>
-                <Text>This is a modal!</Text>
-                <Text style={{color: 'white'}}>
-                    SELECTED ID: {selectedBook.id}
-                </Text>
-                <Text style={{color: 'white'}}>
-                    SELECTED TITLE: {selectedBook.title}
-                </Text>
-                <Pressable onPress={() => setModalVisible(!modalVisible)}><Text>Close Modal.</Text></Pressable>
-            </View>
+                <View style={Styles.modalContainer}>
+                    <View style={Styles.bookInfoContainer}>
+                        <Text style={Styles.textDark}>
+                            SELECTED ID: {selectedBook.id}
+                        </Text>
+                        <Text style={Styles.textDark}>
+                            SELECTED TITLE: {selectedBook.title}
+                        </Text>
+                        <Text style={Styles.textDark}>
+                            SELECTED AUTHOR: {selectedBook.author}
+                        </Text>
+                        <Text style={Styles.textDark}>
+                            SELECTED GENRE: {selectedBook.genre}
+                        </Text>
+                    <TouchableOpacity style={Styles.closeModalButton} onPress={() => setModalVisible(!modalVisible)}>
+                        <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Close Modal.</Text>
+                    </TouchableOpacity>
+                    </View>
+                </View>
             </Modal>
 
             <FlatList 
@@ -64,7 +73,36 @@ const Styles = StyleSheet.create({
 
     modalContainer: {
         flex: 1,
-        backgroundColor: '#121212'
-    }
+        backgroundColor: '#121212',
+        paddingBottom: 20,
+    },
+
+    closeModalButton: {
+        width: 200,
+        height: 40,
+        backgroundColor: '#01579b',
+        borderRadius: 15,
+        marginTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
+        alignSelf: 'center',
+    },
+
+    bookInfoContainer: {
+        flex: 1,
+        borderRadius: 10,
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10,
+        padding: 10,
+        backgroundColor: '#212121'
+    },
+
+    bookTextContainer: {
+        marginLeft: 15,
+        flexShrink: 1,
+    },
 })
 export default BookList

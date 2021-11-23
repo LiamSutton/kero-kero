@@ -11,7 +11,7 @@ import Toast from 'react-native-root-toast'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '1526634457' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '9781524798697' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
@@ -74,7 +74,7 @@ const NewBookScreen = ({ route, navigation}) => {
             title: data.title,
             authorId: authorId,
             genreId: genre,
-            isbn: isbn, // TODO: make sure to change this when using the barcode scanner
+            isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
             cover: data.imageLinks.thumbnail

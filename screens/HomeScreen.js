@@ -37,7 +37,6 @@ const HomeScreen = ({navigation}) => {
 const Styles = StyleSheet.create({
     containerDark: {
         flex: 1,
-        alignItems: 'center',
         backgroundColor: '#121212',
     },
 
