@@ -8,6 +8,8 @@ import { View } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Modal } from 'react-native'
 import { TextInput } from 'react-native'
+import Toast from 'react-native-root-toast'
+import { getBookByISBN, updateBookTitle } from '../database/db'
 import Book from './Book'
 
 const BookList = (props) => {
@@ -15,6 +17,19 @@ const BookList = (props) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedBook, setSelectedBook] = useState({})
     const [bookTitle, setBookTitle] = useState('')
+
+    //TODO: Updating a book title doesnt work.
+    const updateBook = async () => {
+        let id = selectedBook.id
+        let title = bookTitle;
+        
+        let updatedTitle = await updateBookTitle(id, title);
+
+        let toast = await Toast.show('Updated book title. 🚀', Toast.durations.SHORT);
+
+        setModalVisible(!modalVisible)
+    }
+
     return(
         <View style={Styles.container}>
             <Modal
@@ -28,8 +43,8 @@ const BookList = (props) => {
                         <TextInput 
                             style={Styles.textInputDark}
                             onChangeText={(text) => {
+                                    console.log(text)
                                     setBookTitle(text)
-                                    console.log(bookTitle)
                                 }
                             }
                             value={bookTitle}>
@@ -44,7 +59,7 @@ const BookList = (props) => {
                             <TouchableOpacity style={Styles.closeModalButton} onPress={() => setModalVisible(!modalVisible)}>
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={Styles.saveChangesModalButton} onPress={() => setModalVisible(!modalVisible)}>
+                            <TouchableOpacity style={Styles.saveChangesModalButton} onPress={updateBook}>
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Save Changes</Text>
                             </TouchableOpacity>
                         </View>

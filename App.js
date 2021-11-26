@@ -12,10 +12,10 @@ const App = () => {
       // dropAuthorsTable()
       // dropGenresTable()
 
-      createAuthorsTable()
-      createGenresTable()
-      createBooksTable()
-      populateGenresTable()
+      // createAuthorsTable()
+      // createGenresTable()
+      // createBooksTable()
+      // populateGenresTable()
     })()
   }, [])
   return(
