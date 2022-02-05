@@ -289,12 +289,31 @@ export const updateBookTitle = (id, title) => {
     })
 }
 
+export const updateBook = (book) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "UPDATE books SET title = ?, genreId = ? WHERE id = ?;",
+                [book.title, book.genreId,  book.id],
+                (tx, results) => {
+                    console.log(tx)
+                    console.log(results)
+                    let response = true
+                    resolve(response)
+                },
+                (tx, error) => console.error(error)
+            )
+        })
+    })
+}
+
 export const getAllBooks = () => {
     return new Promise((resolve) => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                `SELECT books.id, books.title, authors.name as 'author', genres.name as 'genre', books.cover
+                `SELECT books.id, books.title, books.genreId, authors.name as 'author', genres.name as 'genre', books.cover
                  FROM books
                     JOIN authors on authors.id = books.authorId
                     JOIN genres on genres.id = books.genreId`,

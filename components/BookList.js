@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Text } from 'react-native'
 import { FlatList } from 'react-native'
+import { Picker } from '@react-native-picker/picker'
 import { TouchableOpacity } from 'react-native'
 import { Pressable } from 'react-native'
 import { SafeAreaView } from 'react-native'
@@ -9,23 +10,27 @@ import { StyleSheet } from 'react-native'
 import { Modal } from 'react-native'
 import { TextInput } from 'react-native'
 import Toast from 'react-native-root-toast'
-import { getBookByISBN, updateBookTitle } from '../database/db'
+import { getBookByISBN, updateBook, updateBookTitle } from '../database/db'
 import Book from './Book'
 
 const BookList = (props) => {
     const books = props.books
+    const genres = props.genres
     const [modalVisible, setModalVisible] = useState(false)
     const [selectedBook, setSelectedBook] = useState({})
+    
     const [bookTitle, setBookTitle] = useState('')
+    const [bookGenreId, setBookGenreId] = useState()
 
-    //TODO: Updating a book title doesnt work.
-    const updateBook = async () => {
-        let id = selectedBook.id
-        let title = bookTitle;
-        
-        let updatedTitle = await updateBookTitle(id, title);
-        selectedBook.title = bookTitle; // janky way to update without forcing refresh
-        let toast = await Toast.show('Updated book title. 🚀', Toast.durations.SHORT);
+
+    const editBook = async () => {
+        selectedBook.title = bookTitle
+        selectedBook.genreId = bookGenreId
+        selectedBook.genre = genres.find((genre) => genre.id == bookGenreId).name // TODO: maybe make genres a dict? map id -> name?
+
+        let updatedBook = await updateBook(selectedBook);
+        console.log(updatedBook)
+        let toast = await Toast.show('Updated book. 🚀', Toast.durations.SHORT);
 
         setModalVisible(!modalVisible)
     }
@@ -40,6 +45,9 @@ const BookList = (props) => {
             
                 <View style={Styles.modalContainer}>
                     <View style={Styles.bookInfoContainer}>
+                        <Text style={Styles.textDark}>
+                            Title
+                        </Text>
                         <TextInput 
                             style={Styles.textInputDark}
                             onChangeText={(text) => {
@@ -50,16 +58,22 @@ const BookList = (props) => {
                             value={bookTitle}>
                         </TextInput>
                         <Text style={Styles.textDark}>
-                            SELECTED AUTHOR: {selectedBook.author}
+                            Genre
                         </Text>
-                        <Text style={Styles.textDark}>
-                            SELECTED GENRE: {selectedBook.genre}
-                        </Text>
+                        <View style={Styles.genrePickerContainer}>
+                  <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={bookGenreId} onValueChange={(itemValue, itemIndex) => setBookGenreId(itemValue)}>
+                         {
+                            genres.map((item, index) => {
+                                return <Picker.Item label={item.name} value={item.id} key={item.id}/>
+                            })
+                        }
+                    </Picker>
+                        </View>
                         <View style={Styles.modalButtonsContainer}>
                             <TouchableOpacity style={Styles.closeModalButton} onPress={() => setModalVisible(!modalVisible)}>
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={Styles.saveChangesModalButton} onPress={updateBook}>
+                            <TouchableOpacity style={Styles.saveChangesModalButton} onPress={editBook}>
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Save Changes</Text>
                             </TouchableOpacity>
                         </View>
@@ -73,8 +87,10 @@ const BookList = (props) => {
                 renderItem={({item}) => {
                     return(
                         <TouchableOpacity onPress={() => {
+                            console.log(item)
                             setSelectedBook(item)
                             setBookTitle(item.title)
+                            setBookGenreId(item.genreId)
                             setModalVisible(!modalVisible)
                         }}>
                             <Book bookInfo={item} />
@@ -156,6 +172,21 @@ const Styles = StyleSheet.create({
     bookTextContainer: {
         marginLeft: 15,
         flexShrink: 1,
+    },
+    genrePickerContainer: {
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#181818',
+    },
+
+    genrePicker: {
+        color: 'white',
+        height: 50
+    },
+
+    genrePickerItem: {
+        
     },
 })
 export default BookList
