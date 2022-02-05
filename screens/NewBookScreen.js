@@ -10,8 +10,8 @@ import dayjs from 'dayjs'
 import Toast from 'react-native-root-toast'
 
 const NewBookScreen = ({ route, navigation}) => {
-    // const { isbn } = route.params
-    const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
+    const { isbn } = route.params
+    //const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
@@ -19,7 +19,7 @@ const NewBookScreen = ({ route, navigation}) => {
     
     useEffect(() => {
         const setupScreen = async () => {
-            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
             .then((response) => response.json())
             .then((json) => {
                 setData(json.items[0].volumeInfo)
@@ -33,7 +33,7 @@ const NewBookScreen = ({ route, navigation}) => {
     }, []);
 
     const fetchBookDetails = async () => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
         .then((response) => response.json())
         .then((json) => {
             setData(json.items[0].volumeInfo)
@@ -60,7 +60,7 @@ const NewBookScreen = ({ route, navigation}) => {
     }
 
     const prepareBook = async () => {
-        let bookId = await getBookByISBN(debugISBN);
+        let bookId = await getBookByISBN(isbn);
         if (bookId != null) {
             return null
         }
@@ -74,7 +74,7 @@ const NewBookScreen = ({ route, navigation}) => {
             title: data.title,
             authorId: authorId,
             genreId: genre,
-            isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
+            isbn: isbn, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
             cover: data.imageLinks.thumbnail

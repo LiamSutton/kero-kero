@@ -24,7 +24,7 @@ const BookList = (props) => {
         let title = bookTitle;
         
         let updatedTitle = await updateBookTitle(id, title);
-
+        selectedBook.title = bookTitle; // janky way to update without forcing refresh
         let toast = await Toast.show('Updated book title. 🚀', Toast.durations.SHORT);
 
         setModalVisible(!modalVisible)
