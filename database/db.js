@@ -58,7 +58,7 @@ export const createBooksTable = () => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT NOT NULL UNIQUE, datePublished DATETIME NOT NULL, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL)",
+                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT NOT NULL UNIQUE, datePublished DATETIME NOT NULL, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL)",
                 [],
                 (tx, results) => console.log("[INFO]: Created Table: books"),
                 (tx, error) => console.error(error)
@@ -270,12 +270,50 @@ export const insertBook = (book) => {
     })
 }
 
+export const updateBookTitle = (id, title) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "UPDATE books SET title = ? WHERE id = ?;",
+                [title, id],
+                (tx, results) => {
+                    console.log(tx)
+                    console.log(results)
+                    let response = true
+                    resolve(response)
+                },
+                (tx, error) => console.error(error)
+            )
+        })
+    })
+}
+
+export const updateBook = (book) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                "UPDATE books SET title = ?, genreId = ? WHERE id = ?;",
+                [book.title, book.genreId,  book.id],
+                (tx, results) => {
+                    console.log(tx)
+                    console.log(results)
+                    let response = true
+                    resolve(response)
+                },
+                (tx, error) => console.error(error)
+            )
+        })
+    })
+}
+
 export const getAllBooks = () => {
     return new Promise((resolve) => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                `SELECT books.id, books.title, authors.name as 'author', genres.name as 'genre', books.cover
+                `SELECT books.id, books.title, books.genreId, authors.name as 'author', genres.name as 'genre', books.cover
                  FROM books
                     JOIN authors on authors.id = books.authorId
                     JOIN genres on genres.id = books.genreId`,
@@ -289,5 +327,6 @@ export const getAllBooks = () => {
         })
     })
 }
+
 //#endregion
 

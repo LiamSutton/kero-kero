@@ -11,7 +11,7 @@ import Toast from 'react-native-root-toast'
 
 const NewBookScreen = ({ route, navigation}) => {
     const { isbn } = route.params
-    // const debugISBN = '1526634457' // used when dont have access to / cant be bothered using scanner :)
+    //const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState()
