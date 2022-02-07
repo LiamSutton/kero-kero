@@ -3,14 +3,12 @@ import { Text } from 'react-native'
 import { FlatList } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { TouchableOpacity } from 'react-native'
-import { Pressable } from 'react-native'
-import { SafeAreaView } from 'react-native'
 import { View } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Modal } from 'react-native'
 import { TextInput } from 'react-native'
 import Toast from 'react-native-root-toast'
-import { getBookByISBN, updateBook, updateBookTitle } from '../database/db'
+import { updateBook, deleteBook } from '../database/db'
 import Book from './Book'
 
 const BookList = (props) => {
@@ -31,7 +29,14 @@ const BookList = (props) => {
         let updatedBook = await updateBook(selectedBook);
         console.log(updatedBook)
         let toast = await Toast.show('Updated book. 🚀', Toast.durations.SHORT);
+        
+        setModalVisible(!modalVisible)
+    }
 
+    const yeetBook  = async () => {
+        let deletedBook = await deleteBook(selectedBook.id)
+        let toast = await Toast.show("Deleted Book. 😡", Toast.durations.SHORT)
+        
         setModalVisible(!modalVisible)
     }
 
@@ -75,6 +80,11 @@ const BookList = (props) => {
                             </TouchableOpacity>
                             <TouchableOpacity style={Styles.saveChangesModalButton} onPress={editBook}>
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Save Changes</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={Styles.modalButtonsContainer}>
+                            <TouchableOpacity style={Styles.deleteBookModalButton} onPress={yeetBook}>
+                                <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Delete Book</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -135,7 +145,7 @@ const Styles = StyleSheet.create({
     closeModalButton: {
         width: 150,
         height: 40,
-        backgroundColor: '#BA000D',
+        backgroundColor: '#01579b',
         borderRadius: 15,
         marginTop: 20,
         paddingLeft: 20,
@@ -144,11 +154,25 @@ const Styles = StyleSheet.create({
         paddingBottom: 5,
         alignSelf: 'center',
     },
-
+    
+    deleteBookModalButton: {
+        width: 150,
+        height: 40,
+        backgroundColor: '#BA000D',
+        borderRadius: 15,
+        marginTop: 20,
+        marginLeft: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
+        alignSelf: 'center',
+    },
+    
     saveChangesModalButton: {
         width: 150,
         height: 40,
-        backgroundColor: '#01579b',
+        backgroundColor: '#50d464',
         borderRadius: 15,
         marginTop: 20,
         marginLeft: 20,

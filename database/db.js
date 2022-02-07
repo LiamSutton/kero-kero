@@ -308,6 +308,26 @@ export const updateBook = (book) => {
     })
 }
 
+
+export const deleteBook = (id) => {
+    return new Promise((resolve) => {
+        const db = getConnection()
+        db.transaction(tx => {
+            tx.executeSql(
+                `DELETE FROM books WHERE id = ?`,
+                [id],
+                (tx, results) => {
+                    let response = results.rowsAffected
+                    resolve(response)
+                },
+                (tx, error) => {
+                    console.error(error)
+                }
+            )
+        })
+    })
+}
+
 export const getAllBooks = () => {
     return new Promise((resolve) => {
         const db = getConnection()
