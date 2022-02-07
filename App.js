@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Tabs from './navigation/Tabs'
-import { createAuthorsTable, createBooksTable, createGenresTable, dropAuthorsTable, dropBooksTable, dropGenresTable, getAllGenres, populateGenresTable } from './database/db'
+import { createAuthorsTable, createBooksTable, createGenresTable, deleteBooksExcept, dropAuthorsTable, dropBooksTable, dropGenresTable, getAllBooks, getAllGenres, populateGenresTable } from './database/db'
 import { RootSiblingParent } from 'react-native-root-siblings'
 
 const App = () => {
@@ -15,7 +15,7 @@ const App = () => {
       createAuthorsTable()
       createGenresTable()
       createBooksTable()
-      populateGenresTable()
+      // populateGenresTable()
     })()
   }, [])
   return(
