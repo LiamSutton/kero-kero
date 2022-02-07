@@ -53,8 +53,12 @@ const NewBookScreen = ({ route, navigation}) => {
         let book = await prepareBook()
         if (book != null) {
         const bookId = await insertBook(book)
+        
         let toast = Toast.show(bookId != null ? "Book added to your library. 🥳" : "Unable to add book to your library. 😔",
             {duration: Toast.durations.SHORT})
+        
+         navigation.navigate("Home", {
+         })
         } else {
             let toast = Toast.show("This book is already in your library? 🤔", 
             {duration: Toast.durations.SHORT})

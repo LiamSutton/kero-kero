@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Text } from 'react-native'
+import { Image } from 'react-native'
 import { FlatList } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { TouchableOpacity } from 'react-native'
@@ -50,9 +51,7 @@ const BookList = (props) => {
             
                 <View style={Styles.modalContainer}>
                     <View style={Styles.bookInfoContainer}>
-                        <Text style={Styles.textDark}>
-                            Title
-                        </Text>
+                        <Image style={Styles.bookThumbmail} source={{uri: selectedBook.cover}} />
                         <TextInput 
                             style={Styles.textInputDark}
                             onChangeText={(text) => {
@@ -62,9 +61,6 @@ const BookList = (props) => {
                             }
                             value={bookTitle}>
                         </TextInput>
-                        <Text style={Styles.textDark}>
-                            Genre
-                        </Text>
                         <View style={Styles.genrePickerContainer}>
                   <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={bookGenreId} onValueChange={(itemValue, itemIndex) => setBookGenreId(itemValue)}>
                          {
@@ -190,6 +186,7 @@ const Styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         padding: 10,
+        paddingTop: 100,
         backgroundColor: '#212121'
     },
 
@@ -211,6 +208,12 @@ const Styles = StyleSheet.create({
 
     genrePickerItem: {
         
+    },
+    bookThumbmail: {
+        height: 300,
+        width: 250,
+        alignSelf: 'center',
+        marginBottom: 25,
     },
 })
 export default BookList
