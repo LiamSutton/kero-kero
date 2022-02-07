@@ -8,14 +8,15 @@ import { Button } from 'react-native-elements/dist/buttons/Button'
 import { getAllAuthors, getAllGenres, getAuthorByName, getBookByISBN, insertAuthor, insertBook } from '../database/db'
 import dayjs from 'dayjs'
 import Toast from 'react-native-root-toast'
+import * as FileSystem from 'expo-file-system'
 
 const NewBookScreen = ({ route, navigation}) => {
     const { isbn } = route.params
     //const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
-    const [genre, setGenre] = useState()
-    const [genreList, setGenreList] = useState([{id: '-1', name: 'Unknown'}])
+    const [genre, setGenre] = useState(1)
+    const [genreList, setGenreList] = useState([{id: '1', name: 'Action'}])
     
     useEffect(() => {
         const setupScreen = async () => {
@@ -37,6 +38,7 @@ const NewBookScreen = ({ route, navigation}) => {
         .then((response) => response.json())
         .then((json) => {
             setData(json.items[0].volumeInfo)
+            console.log(json.items[0].volumeInfo)
         })
         .catch((error) => console.log(error))
     }
@@ -60,6 +62,7 @@ const NewBookScreen = ({ route, navigation}) => {
     }
 
     const prepareBook = async () => {
+
         let bookId = await getBookByISBN(isbn);
         if (bookId != null) {
             return null
@@ -69,7 +72,18 @@ const NewBookScreen = ({ route, navigation}) => {
         let authorId = await handleAuthor(authorName)
         console.log(authorId);
         const dateCreated = dayjs().format("YYYY-MM-DD")
-        console.log("BOOK DATA: ")
+        console.log("Genre: " + genre)
+        
+        // Download to phone (move into own method???)
+        FileSystem.downloadAsync(
+            data.imageLinks.thumbnail,
+           `${FileSystem.documentDirectory}${data.title}.png`
+        ).then(({uri}) => {
+            console.log("Finished downloading to " + uri)
+        }).catch(error => {
+            console.error(error)
+        })
+
         let book = {
             title: data.title,
             authorId: authorId,
@@ -77,7 +91,7 @@ const NewBookScreen = ({ route, navigation}) => {
             isbn: isbn, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
-            cover: data.imageLinks.thumbnail
+            cover: `${FileSystem.documentDirectory}${data.title}.png`
         }
         return book
     }
@@ -88,6 +102,13 @@ const NewBookScreen = ({ route, navigation}) => {
             authorId = await insertAuthor(authorName)
         }
         return authorId
+    }
+
+    const downloadBookCover = async () => {
+        return new Promise((resolve) => {
+            const documentDir = FileSystem.documentDirectory
+            resolve(documentDir)
+        }) 
     }
     return(
         <SafeAreaView style={Styles.containerDark}>
