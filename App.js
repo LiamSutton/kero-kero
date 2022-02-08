@@ -2,20 +2,28 @@ import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Tabs from './navigation/Tabs'
-import { createAuthorsTable, createBooksTable, createGenresTable, deleteBooksExcept, dropAuthorsTable, dropBooksTable, dropGenresTable, getAllBooks, getAllGenres, populateGenresTable } from './database/db'
+import { createAuthorsTable, createBooksTable, createGenresTable, populateGenresTable } from './database/db'
 import { RootSiblingParent } from 'react-native-root-siblings'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   useEffect(() => {
     (async () => {
-      dropBooksTable()
-      dropAuthorsTable()
-      dropGenresTable()
 
-      createAuthorsTable()
-      createGenresTable()
-      createBooksTable()
-      populateGenresTable()
+      const isFirstLaunch = await AsyncStorage.getItem('@is_first_launch')
+
+      if (isFirstLaunch == null) {
+
+        console.log("FIRST TIME LAUNCH")
+        const jsonValue = JSON.stringify(false)
+        await AsyncStorage.setItem('@is_first_launch', jsonValue)
+        createAuthorsTable()
+        createGenresTable()
+        createBooksTable()
+        populateGenresTable()
+      } else {
+        console.log("App has been launched before")
+      }
     })()
   }, [])
   return(
