@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import { SafeAreaView, Text, Image, View, TouchableOpacity} from 'react-native'
+import { SafeAreaView, Text, Image, View, TouchableOpacity, Switch} from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -16,6 +16,7 @@ const NewBookScreen = ({ route, navigation}) => {
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
+    const [hasRead, setHasRead] = useState(false)
     const [genreList, setGenreList] = useState([{id: '1', name: 'Action'}])
     
     useEffect(() => {
@@ -32,6 +33,8 @@ const NewBookScreen = ({ route, navigation}) => {
         }
         setupScreen()
     }, []);
+
+    const toggleHasRead = () => setHasRead(!hasRead)
 
     const fetchBookDetails = async () => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
@@ -95,7 +98,8 @@ const NewBookScreen = ({ route, navigation}) => {
             isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
-            cover: `${FileSystem.documentDirectory}${data.title}.png`
+            cover: `${FileSystem.documentDirectory}${data.title}.png`,
+            hasRead: hasRead,
         }
         return book
     }
@@ -149,6 +153,11 @@ const NewBookScreen = ({ route, navigation}) => {
                     </Picker>
                 </View>
             }
+     
+            <View style={Styles.hasReadContainer}>
+                <Text style={[Styles.textDark, {marginLeft: 10}]}>Has Read?</Text>
+                <Switch style={{paddingLeft: 25}} value={hasRead} onValueChange={toggleHasRead}></Switch>
+            </View>
             
             <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center', paddingTop: 5}}>Add Book</Text>
@@ -218,7 +227,15 @@ const Styles = StyleSheet.create({
     },
 
     genrePickerItem: {
-        
+    },
+
+    hasReadContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 25,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#212121',
     }
 })
 

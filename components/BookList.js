@@ -8,6 +8,7 @@ import { View } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Modal } from 'react-native'
 import { TextInput } from 'react-native'
+import { Switch } from 'react-native'
 import Toast from 'react-native-root-toast'
 import { updateBook, deleteBook } from '../database/db'
 import Book from './Book'
@@ -20,13 +21,15 @@ const BookList = (props) => {
     
     const [bookTitle, setBookTitle] = useState('')
     const [bookGenreId, setBookGenreId] = useState()
+    const [bookHasRead, setBookHasRead] = useState()
 
+    const toggleHasRead = () => setBookHasRead(!bookHasRead)
 
     const editBook = async () => {
         selectedBook.title = bookTitle
         selectedBook.genreId = bookGenreId
         selectedBook.genre = genres.find((genre) => genre.id == bookGenreId).name // TODO: maybe make genres a dict? map id -> name?
-
+        selectedBook.hasRead = bookHasRead
         let updatedBook = await updateBook(selectedBook);
         console.log(updatedBook)
         let toast = await Toast.show('Updated book. 🚀', Toast.durations.SHORT);
@@ -70,6 +73,10 @@ const BookList = (props) => {
                         }
                     </Picker>
                         </View>
+                        <View style={Styles.hasReadContainer}>
+                            <Text style={[Styles.textDark, {marginLeft: 10}]}>Has Read?</Text>
+                            <Switch style={{paddingLeft: 25}} value={bookHasRead == 1} onValueChange={toggleHasRead}></Switch>
+                        </View>
                         <View style={Styles.modalButtonsContainer}>
                             <TouchableOpacity style={Styles.closeModalButton} onPress={() => setModalVisible(!modalVisible)}>
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Cancel</Text>
@@ -96,6 +103,7 @@ const BookList = (props) => {
                             console.log(item)
                             setSelectedBook(item)
                             setBookTitle(item.title)
+                            setBookHasRead(item.hasRead)
                             setBookGenreId(item.genreId)
                             setModalVisible(!modalVisible)
                         }}>
@@ -215,5 +223,13 @@ const Styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 25,
     },
+    hasReadContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 25,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#212121',
+    }
 })
 export default BookList

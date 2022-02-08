@@ -294,7 +294,7 @@ export const updateBook = (book) => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "UPDATE books SET title = ?, genreId = ?, hasRead = ?,  WHERE id = ?;",
+                "UPDATE books SET title = ?, genreId = ?, hasRead = ?  WHERE id = ?;",
                 [book.title, book.genreId, book.hasRead, book.id],
                 (tx, results) => {
                     console.log(tx)
