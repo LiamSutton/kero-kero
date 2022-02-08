@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import { SafeAreaView, Text, Image, View, TouchableOpacity} from 'react-native'
+import { SafeAreaView, Text, Image, View, TouchableOpacity, Switch} from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -11,16 +11,17 @@ import Toast from 'react-native-root-toast'
 import * as FileSystem from 'expo-file-system'
 
 const NewBookScreen = ({ route, navigation}) => {
-    const { isbn } = route.params
-    //const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
+    // const { isbn } = route.params
+    const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
+    const [hasRead, setHasRead] = useState(false)
     const [genreList, setGenreList] = useState([{id: '1', name: 'Action'}])
     
     useEffect(() => {
         const setupScreen = async () => {
-            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
+            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
             .then((response) => response.json())
             .then((json) => {
                 setData(json.items[0].volumeInfo)
@@ -33,8 +34,10 @@ const NewBookScreen = ({ route, navigation}) => {
         setupScreen()
     }, []);
 
+    const toggleHasRead = () => setHasRead(!hasRead)
+
     const fetchBookDetails = async () => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
         .then((response) => response.json())
         .then((json) => {
             setData(json.items[0].volumeInfo)
@@ -67,7 +70,7 @@ const NewBookScreen = ({ route, navigation}) => {
 
     const prepareBook = async () => {
 
-        let bookId = await getBookByISBN(isbn);
+        let bookId = await getBookByISBN(debugISBN);
         if (bookId != null) {
             return null
         }
@@ -92,10 +95,11 @@ const NewBookScreen = ({ route, navigation}) => {
             title: data.title,
             authorId: authorId,
             genreId: genre,
-            isbn: isbn, // TODO: make sure to change this when using the barcode scanner
+            isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
-            cover: `${FileSystem.documentDirectory}${data.title}.png`
+            cover: `${FileSystem.documentDirectory}${data.title}.png`,
+            hasRead: hasRead,
         }
         return book
     }
@@ -149,6 +153,11 @@ const NewBookScreen = ({ route, navigation}) => {
                     </Picker>
                 </View>
             }
+     
+            <View style={Styles.hasReadContainer}>
+                <Text style={[Styles.textDark, {marginLeft: 10}]}>Has Read?</Text>
+                <Switch style={{paddingLeft: 25}} value={hasRead} onValueChange={toggleHasRead}></Switch>
+            </View>
             
             <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center', paddingTop: 5}}>Add Book</Text>
@@ -218,7 +227,15 @@ const Styles = StyleSheet.create({
     },
 
     genrePickerItem: {
-        
+    },
+
+    hasReadContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 25,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#212121',
     }
 })
 
