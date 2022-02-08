@@ -58,7 +58,7 @@ export const createBooksTable = () => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT NOT NULL UNIQUE, datePublished DATETIME NOT NULL, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL)",
+                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT NOT NULL UNIQUE, datePublished DATETIME NOT NULL, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL, hasRead BOOLEAN NOT NULL)",
                 [],
                 (tx, results) => console.log("[INFO]: Created Table: books"),
                 (tx, error) => console.error(error)
@@ -254,8 +254,8 @@ export const insertBook = (book) => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "INSERT INTO books (title, authorId, genreId, isbn, datePublished, dateCreated, cover) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                [book.title, book.authorId, book.genreId, book.isbn, book.datePublished, book.dateCreated, book.cover],
+                "INSERT INTO books (title, authorId, genreId, isbn, datePublished, dateCreated, cover, hasRead) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                [book.title, book.authorId, book.genreId, book.isbn, book.datePublished, book.dateCreated, book.cover, book.hasRead],
                 (tx, results) => {
                     console.log(tx)
                     let response = null
@@ -294,8 +294,8 @@ export const updateBook = (book) => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "UPDATE books SET title = ?, genreId = ? WHERE id = ?;",
-                [book.title, book.genreId,  book.id],
+                "UPDATE books SET title = ?, genreId = ?, hasRead = ?,  WHERE id = ?;",
+                [book.title, book.genreId, book.hasRead, book.id],
                 (tx, results) => {
                     console.log(tx)
                     console.log(results)
@@ -333,7 +333,7 @@ export const getAllBooks = () => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                `SELECT books.id, books.title, books.genreId, authors.name as 'author', genres.name as 'genre', books.cover
+                `SELECT books.id, books.title, books.genreId, authors.name as 'author', genres.name as 'genre', books.cover, books.hasRead
                  FROM books
                     JOIN authors on authors.id = books.authorId
                     JOIN genres on genres.id = books.genreId`,

@@ -8,14 +8,14 @@ import { RootSiblingParent } from 'react-native-root-siblings'
 const App = () => {
   useEffect(() => {
     (async () => {
-      // dropBooksTable()
-      // dropAuthorsTable()
-      // dropGenresTable()
+      dropBooksTable()
+      dropAuthorsTable()
+      dropGenresTable()
 
       createAuthorsTable()
       createGenresTable()
       createBooksTable()
-      // populateGenresTable()
+      populateGenresTable()
     })()
   }, [])
   return(

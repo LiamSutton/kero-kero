@@ -11,8 +11,8 @@ import Toast from 'react-native-root-toast'
 import * as FileSystem from 'expo-file-system'
 
 const NewBookScreen = ({ route, navigation}) => {
-    const { isbn } = route.params
-    //const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
+    // const { isbn } = route.params
+    const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
@@ -20,7 +20,7 @@ const NewBookScreen = ({ route, navigation}) => {
     
     useEffect(() => {
         const setupScreen = async () => {
-            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
+            fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
             .then((response) => response.json())
             .then((json) => {
                 setData(json.items[0].volumeInfo)
@@ -34,7 +34,7 @@ const NewBookScreen = ({ route, navigation}) => {
     }, []);
 
     const fetchBookDetails = async () => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${debugISBN}`)
         .then((response) => response.json())
         .then((json) => {
             setData(json.items[0].volumeInfo)
@@ -67,7 +67,7 @@ const NewBookScreen = ({ route, navigation}) => {
 
     const prepareBook = async () => {
 
-        let bookId = await getBookByISBN(isbn);
+        let bookId = await getBookByISBN(debugISBN);
         if (bookId != null) {
             return null
         }
@@ -92,7 +92,7 @@ const NewBookScreen = ({ route, navigation}) => {
             title: data.title,
             authorId: authorId,
             genreId: genre,
-            isbn: isbn, // TODO: make sure to change this when using the barcode scanner
+            isbn: debugISBN, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
             cover: `${FileSystem.documentDirectory}${data.title}.png`
