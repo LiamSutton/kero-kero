@@ -12,7 +12,7 @@ import * as FileSystem from 'expo-file-system'
 
 const NewBookScreen = ({ route, navigation}) => {
     // const { isbn } = route.params
-    const debugISBN = '0545583004' // used when dont have access to / cant be bothered using scanner :)
+    const debugISBN = '9781526634450' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
@@ -41,7 +41,6 @@ const NewBookScreen = ({ route, navigation}) => {
         .then((response) => response.json())
         .then((json) => {
             setData(json.items[0].volumeInfo)
-            console.log(json.items[0].volumeInfo)
         })
         .catch((error) => console.log(error))
     }

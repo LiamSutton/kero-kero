@@ -93,7 +93,7 @@ const BookList = (props) => {
                     </View>
                 </View>
             </Modal>
-
+                            
             <FlatList 
                 data={books}
                 keyExtractor={(item) => item.id.toString()}
@@ -123,6 +123,7 @@ const Styles = StyleSheet.create({
     },
 
     container: {
+        flex: 1,
         marginTop: 20,
         marginBottom: 20,
     },
