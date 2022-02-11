@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, StyleSheet, View, Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { BarCodeScanner } from 'expo-barcode-scanner'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 const ScanBookScreen = ({ navigation }) => {
     const [hasPermission, setHasPermission] = useState(null)
@@ -23,6 +24,10 @@ const ScanBookScreen = ({ navigation }) => {
         })
     }
 
+    const handleManualEntryNavigation = () => {
+        navigation.navigate("Manual Entry")
+    }
+
     if (hasPermission === null) {
         return <Text>Requesting for camera permission</Text>
     }
@@ -36,6 +41,13 @@ const ScanBookScreen = ({ navigation }) => {
             <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarcodeScanned}
                 style={StyleSheet.absoluteFillObject}
+            />
+            <Ionicons
+                style={{position: 'absolute', bottom: 25, alignSelf: 'flex-end'}}
+                name={'add-circle'}
+                size={125}
+                color={'#01579b'}
+                onPress={handleManualEntryNavigation}
             />
             {scanned && <Button title={"Tap To Scan Again."} onPress={() => setScanned(false)} />}
         </View>
