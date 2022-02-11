@@ -49,6 +49,7 @@ const Tabs = () => {
                 component={SearchScreen}
                 options={{
                     tabBarShowLabel: false,
+                    unmountOnBlur: true,
                     tabBarIcon: ({ focused }) => {
                         return <Ionicons
                             name={'search'}
