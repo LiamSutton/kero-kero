@@ -4,7 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Tabs from './navigation/Tabs'
 import { createAuthorsTable, createBooksTable, createGenresTable, populateGenresTable } from './database/db'
 import { RootSiblingParent } from 'react-native-root-siblings'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const App = () => {
   useEffect(() => {
