@@ -4,20 +4,26 @@ import { View, Text, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker'
 import BookList from '../components/BookList';
-import { getAllBooks, getAllGenres, searchBooksByTitle } from '../database/db';
+import { getAllBooks, getAllGenres } from '../database/db';
 const SearchScreen = ({ navigation }) => {
 
     const [isLoading, setIsLoading] = useState(true)
     const [masterBookList, setMasterBookList] = useState([])
     const [bookList, setBookList] = useState([])
     const [genreList, setGenreList] = useState([])
+    const [searchText, setSearchText] = useState('')
     const [filterBy, setFilterBy] = useState('title')
+    const [hasRead, setHasRead] = useState('any')
+
     useEffect(() => {
         if (navigation.isFocused()) {
             fetchData()
         }
     }, [navigation.isFocused()])
 
+    useEffect(() => {
+        filterBookList()
+    }, [searchText, filterBy, hasRead])
 
     const fetchData = async () => {
         const books = await getAllBooks()
@@ -29,18 +35,33 @@ const SearchScreen = ({ navigation }) => {
         setIsLoading(false)
     }
 
-    const filterBookList = (text) => {
+    const filterBookList = () => {
+        
         let books = null
+
         if (filterBy == 'title') {
-            books = filterByTitle(text)
+            books = filterByTitle(searchText)
         }
         if (filterBy == 'author') {
-            books = filterByAuthor(text)
+            books = filterByAuthor(searchText)
         }
         if (filterBy == 'genre') {
-           books = filterByGenre(text)
+           books = filterByGenre(searchText)
         }
 
+        if (hasRead == 'any') {
+            // no filtering required as no point in trying to filter true or false for a boolean state
+        }
+        if (hasRead == 'read') {
+            books = books.filter((book) => {
+                return book.hasRead == true
+            })
+        }
+        if (hasRead == 'unread') {
+            books = books.filter((book) => {
+                return book.hasRead == false
+            })
+        }
         setBookList(books)
     }
 
@@ -73,9 +94,7 @@ const SearchScreen = ({ navigation }) => {
             <View style={Styles.searchContainer}>
                 <TextInput
                     style={Styles.textInputDark}
-                    onChangeText={(text) => {
-                        filterBookList(text)
-                    }}
+                    onChangeText={e => {setSearchText(e)}}
                 >
                 </TextInput>
                 <View style={Styles.genrePickerContainer}>
@@ -83,12 +102,22 @@ const SearchScreen = ({ navigation }) => {
                     dropdownIconColor={'#FFFFFF'}
                     style={Styles.genrePicker}
                         selectedValue={filterBy}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setFilterBy(itemValue)
-                        }>
+                        onValueChange={e => {setFilterBy(e)}}>
                         <Picker.Item label="Title" value="title" />
                         <Picker.Item label="Author" value="author"/>
                         <Picker.Item label="Genre" value="genre"/>
+                </Picker>
+                </View>
+
+                <View style={Styles.genrePickerContainer}>
+                <Picker
+                    dropdownIconColor={'#FFFFFF'}
+                    style={Styles.genrePicker}
+                        selectedValue={hasRead}
+                        onValueChange={e => {setHasRead(e)}}>
+                        <Picker.Item label="Any" value="any" />
+                        <Picker.Item label="Read" value="read"/>
+                        <Picker.Item label="Unread" value="unread"/>
                 </Picker>
                 </View>
             </View>
@@ -124,8 +153,9 @@ const Styles = StyleSheet.create({
     genrePickerContainer: {
         backgroundColor: '#212121',
         borderWidth: 1,
-        marginLeft: 12,
-        marginRight: 12,
+        margin: 12,
+        marginTop: 5,
+        marginBottom: 0,
     },
 
     genrePicker: {
