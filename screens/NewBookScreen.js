@@ -1,5 +1,5 @@
-import React, { useState, useEffect} from 'react'
-import { SafeAreaView, Text, Image, View, TouchableOpacity, Switch} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { SafeAreaView, Text, Image, View, TouchableOpacity, Switch } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -10,26 +10,30 @@ import dayjs from 'dayjs'
 import Toast from 'react-native-root-toast'
 import * as FileSystem from 'expo-file-system'
 
-const NewBookScreen = ({ route, navigation}) => {
+const NewBookScreen = ({ route, navigation }) => {
     const { isbn } = route.params
     // const debugISBN = '9781526634450' // used when dont have access to / cant be bothered using scanner :)
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
+    const [hasImage, setHasImage] = useState(false)
     const [hasRead, setHasRead] = useState(false)
-    const [genreList, setGenreList] = useState([{id: '1', name: 'Action'}])
-    
+    const [genreList, setGenreList] = useState([{ id: '1', name: 'Action' }])
+
     useEffect(() => {
         const setupScreen = async () => {
             fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
-            .then((response) => response.json())
-            .then((json) => {
-                setData(json.items[0].volumeInfo)
-            }).finally(async() => {
-                const list = await getAllGenres()
-                setGenreList(list)
-                setIsLoading(false)
-            })
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.items[0].volumeInfo.hasOwnProperty("imageLinks")) {
+                        setHasImage(true)
+                    }
+                    setData(json.items[0].volumeInfo)
+                }).finally(async () => {
+                    const list = await getAllGenres()
+                    setGenreList(list)
+                    setIsLoading(false)
+                })
         }
         setupScreen()
     }, []);
@@ -38,11 +42,11 @@ const NewBookScreen = ({ route, navigation}) => {
 
     const fetchBookDetails = async () => {
         fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
-        .then((response) => response.json())
-        .then((json) => {
-            setData(json.items[0].volumeInfo)
-        })
-        .catch((error) => console.log(error))
+            .then((response) => response.json())
+            .then((json) => {
+                setData(json.items[0].volumeInfo)
+            })
+            .catch((error) => console.log(error))
     }
 
     const populateGenreList = async () => {
@@ -54,16 +58,16 @@ const NewBookScreen = ({ route, navigation}) => {
     const addBook = async () => {
         let book = await prepareBook()
         if (book != null) {
-        const bookId = await insertBook(book)
-        
-        let toast = Toast.show(bookId != null ? "Book added to your library. 🥳" : "Unable to add book to your library. 😔",
-            {duration: Toast.durations.SHORT})
-        
-         navigation.navigate("Home", {
-         })
+            const bookId = await insertBook(book)
+
+            let toast = Toast.show(bookId != null ? "Book added to your library. 🥳" : "Unable to add book to your library. 😔",
+                { duration: Toast.durations.SHORT })
+
+            navigation.navigate("Home", {
+            })
         } else {
-            let toast = Toast.show("This book is already in your library? 🤔", 
-            {duration: Toast.durations.SHORT})
+            let toast = Toast.show("This book is already in your library? 🤔",
+                { duration: Toast.durations.SHORT })
         }
     }
 
@@ -74,17 +78,16 @@ const NewBookScreen = ({ route, navigation}) => {
             return null
         }
         const authorName = data.authors[0]
-        console.log(authorName)
         let authorId = await handleAuthor(authorName)
         console.log(authorId);
         const dateCreated = dayjs().format("YYYY-MM-DD")
-        console.log("Genre: " + genre)
-        
+    
+        let uri = hasImage ? data.imageLinks.thumbnail : 'https://islandpress.org/sites/default/files/default_book_cover_2015.jpg'
         // Download to phone (move into own method???)
         FileSystem.downloadAsync(
-            data.imageLinks.thumbnail,
-           `${FileSystem.documentDirectory}${data.title}.png`
-        ).then(({uri}) => {
+            uri,
+            `${FileSystem.documentDirectory}${data.title}.png`
+        ).then(({ uri }) => {
             console.log("Finished downloading to " + uri)
         }).catch(error => {
             console.error(error)
@@ -115,51 +118,59 @@ const NewBookScreen = ({ route, navigation}) => {
         return new Promise((resolve) => {
             const documentDir = FileSystem.documentDirectory
             resolve(documentDir)
-        }) 
+        })
     }
-    return(
+    return (
         <SafeAreaView style={Styles.containerDark}>
             {
                 isLoading ? <Text>Loading...</Text> :
-                <View style={Styles.bookContainer}>
-                    <Image 
-                        style={Styles.bookThumbnail}
-                        source={{uri: data.imageLinks.thumbnail}}
-                    />
-                    <View style={Styles.bookTextContainer}>
-                        <Text style={Styles.titleTextDark}>
-                            {data.title}
-                        </Text>
-                        <Text style={Styles.textDark}>
-                            {data.authors}
-                        </Text>
-                        <Text style={Styles.textDark}>
-                            {dayjs(data.publishedDate).format("DD/MM/YYYY")}
-                        </Text>
+                    <View style={Styles.bookContainer}>
+                        {
+                           hasImage ?
+                           <Image 
+                            style={Styles.bookThumbnail}
+                            source={{uri: data.imageLinks.thumbnail}}
+                           />
+                           :
+                           <Image 
+                           style={Styles.bookThumbnail}
+                           source={{uri: 'https://islandpress.org/sites/default/files/default_book_cover_2015.jpg'}}
+                          />
+                        }
+                        <View style={Styles.bookTextContainer}>
+                            <Text style={Styles.titleTextDark}>
+                                {data.title}
+                            </Text>
+                            <Text style={Styles.textDark}>
+                                {data.authors}
+                            </Text>
+                            <Text style={Styles.textDark}>
+                                {dayjs(data.publishedDate).format("DD/MM/YYYY")}
+                            </Text>
+                        </View>
                     </View>
-                </View>
             }
 
             {
                 isLoading ? <Text>Loading Genres...</Text> :
-                <View style={Styles.genrePickerContainer}>
-                  <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
-                         {
-                            genreList.map((item, index) => {
-                                return <Picker.Item label={item.name} value={item.id} key={item.id}/>
-                            })
-                        }
-                    </Picker>
-                </View>
+                    <View style={Styles.genrePickerContainer}>
+                        <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
+                            {
+                                genreList.map((item, index) => {
+                                    return <Picker.Item label={item.name} value={item.id} key={item.id} />
+                                })
+                            }
+                        </Picker>
+                    </View>
             }
-     
+
             <View style={Styles.hasReadContainer}>
-                <Text style={[Styles.textDark, {marginLeft: 10}]}>Has Read?</Text>
-                <Switch style={{paddingLeft: 25}} value={hasRead} onValueChange={toggleHasRead}></Switch>
+                <Text style={[Styles.textDark, { marginLeft: 10 }]}>Has Read?</Text>
+                <Switch style={{ paddingLeft: 25 }} value={hasRead} onValueChange={toggleHasRead}></Switch>
             </View>
-            
+
             <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
-                <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center', paddingTop: 5}}>Add Book</Text>
+                <Text style={{ textAlignVertical: 'center', color: 'white', textAlign: 'center', paddingTop: 5 }}>Add Book</Text>
             </TouchableOpacity>
         </SafeAreaView>
     )
@@ -212,7 +223,7 @@ const Styles = StyleSheet.create({
         paddingBottom: 5,
         alignSelf: 'center',
     },
-    
+
     genrePickerContainer: {
         marginTop: 25,
         marginLeft: 10,
