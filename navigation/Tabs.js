@@ -66,6 +66,7 @@ const Tabs = () => {
                 options={{
                     tabBarShowLabel: false,
                     unmountOnBlur: true,
+                    tabBarButton: () => null,
                     tabBarIcon: ({ focused }) => {
                         return <Ionicons style={{}}
                             name={'book'}
