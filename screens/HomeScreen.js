@@ -29,9 +29,16 @@ const HomeScreen = ({navigation}) => {
     return(
         <SafeAreaView style={Styles.containerDark}>
             {
+                !isLoading ?
+                <Text style={Styles.textDark}>
+                    You have {bookList.length} books!
+                </Text>
+                : <Text></Text>
+            }
+            {
                 isLoading ? 
                 <Text style={Styles.textDark}>Loading books...</Text> : 
-                <BookList books={bookList} genres={genreList}/>
+                 <BookList books={bookList} genres={genreList}/>
             }
         </SafeAreaView>
     )
@@ -44,9 +51,11 @@ const Styles = StyleSheet.create({
     },
 
     textDark: {
+        paddingTop: 15,
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
+        alignSelf: 'center'
     }
 })
 export default HomeScreen
