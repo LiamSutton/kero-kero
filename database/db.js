@@ -58,7 +58,7 @@ export const createBooksTable = () => {
         const db = getConnection()
         db.transaction(tx => {
             tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT NOT NULL UNIQUE, datePublished DATETIME NOT NULL, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL, hasRead BOOLEAN NOT NULL)",
+                "CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, authorId INTEGER NOT NULL, genreId INTEGER NOT NULL, isbn TEXT, datePublished DATETIME, dateCreated DATETIME NOT NULL, cover TEXT NOT NULL, hasRead BOOLEAN NOT NULL)",
                 [],
                 (tx, results) => console.log("[INFO]: Created Table: books"),
                 (tx, error) => console.error(error)

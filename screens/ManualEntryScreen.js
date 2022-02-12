@@ -10,6 +10,11 @@ const ManualEntryScreen = ({ navigation }) => {
             isbn: manualIsbn
         })
     }
+
+    const addBookWithoutIsbn = () => {
+        navigation.navigate("Manual New Book")
+    }
+
     return (
         <View style={Stlyes.containerDark}>
             <Text style={Stlyes.textDark}>Enter ISBN</Text>
@@ -21,6 +26,9 @@ const ManualEntryScreen = ({ navigation }) => {
             </TextInput>
             <TouchableOpacity style={Stlyes.submitButton} onPress={submitIsbn}>
                 <Text style={{ textAlignVertical: 'center', color: 'white', textAlign: 'center' }}>Submit ISBN</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={Stlyes.addBookWIthoutIsbnButton} onPress={addBookWithoutIsbn}>
+                <Text style={{ textAlignVertical: 'center', color: 'white', textAlign: 'center' }}>Manually add book without ISBN</Text>
             </TouchableOpacity>
         </View>
     )
@@ -51,7 +59,20 @@ const Stlyes = StyleSheet.create({
 
     submitButton: {
         width: 150,
-        height: 40,
+        minHeight: 40,
+        backgroundColor: '#01579b',
+        borderRadius: 15,
+        marginTop: 20,
+        marginLeft: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 5,
+        alignSelf: 'center',
+    },
+    addBookWIthoutIsbnButton: {
+        width: 150,
+        minHeight: 40,
         backgroundColor: '#01579b',
         borderRadius: 15,
         marginTop: 20,

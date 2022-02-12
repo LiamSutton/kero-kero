@@ -7,6 +7,7 @@ import NewBookScreen from '../screens/NewBookScreen'
 import SearchScreen from '../screens/SearchScreen'
 import ScanBookScreen from '../screens/ScanBookScreen'
 import ManualEntryScreen from '../screens/ManualEntryScreen'
+import ManualNewBookScreen from '../screens/ManualNewBookScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -92,7 +93,6 @@ const Tabs = () => {
                     }
                 }}
             />
-
             <Tab.Screen
                 name='Manual Entry'
                 component={ManualEntryScreen}
@@ -100,6 +100,15 @@ const Tabs = () => {
                     tabBarShowLabel: false,
                     unmountOnBlur: true,
                     tabBarButton: () => null,
+                }} 
+            />
+
+            <Tab.Screen
+                name='Manual New Book'
+                component={ManualNewBookScreen}
+                options={{
+                    tabBarShowLabel: false,
+                    tabBarButton: () =>  null,
                 }} 
             />
 
