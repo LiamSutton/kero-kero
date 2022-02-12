@@ -24,11 +24,11 @@ const ManualEntryScreen = ({ navigation }) => {
                 onChangeText={(text) => setManualIsbn(text)}
             >
             </TextInput>
-            <TouchableOpacity style={Stlyes.submitButton} onPress={submitIsbn}>
-                <Text style={{ textAlignVertical: 'center', color: 'white', textAlign: 'center' }}>Submit ISBN</Text>
+            <TouchableOpacity style={[Stlyes.submitButton, {justifyContent: 'center'}]} onPress={submitIsbn}>
+            <Text style={{ color: 'white', alignSelf: 'center'}}>Submit ISBN</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={Stlyes.addBookWIthoutIsbnButton} onPress={addBookWithoutIsbn}>
-                <Text style={{ textAlignVertical: 'center', color: 'white', textAlign: 'center' }}>Manually add book without ISBN</Text>
+            <TouchableOpacity style={[Stlyes.addBookWIthoutIsbnButton, {justifyContent: 'center'}]} onPress={addBookWithoutIsbn}>
+                <Text style={{ color: 'white', alignSelf: 'center'}}>Add without ISBN</Text>
             </TouchableOpacity>
         </View>
     )

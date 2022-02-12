@@ -143,21 +143,7 @@ const Styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 5,
-        alignSelf: 'center',
-    },
-    
-    deleteBookModalButton: {
-        width: 150,
-        height: 40,
-        backgroundColor: '#BA000D',
-        borderRadius: 15,
-        marginTop: 20,
-        marginLeft: 20,
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 5,
-        paddingBottom: 5,
-        alignSelf: 'center',
+        justifyContent: 'center',
     },
     
     saveChangesModalButton: {
@@ -171,7 +157,7 @@ const Styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 5,
         paddingBottom: 5,
-        alignSelf: 'center',
+        justifyContent: 'center',
     },
 
     bookInfoContainer: {
