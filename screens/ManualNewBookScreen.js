@@ -34,9 +34,11 @@ const ManualNewBookScreen = ({ navigation }) => {
         const dateCreated = dayjs().format("YYYY-MM-DD")
         let uri = 'https://islandpress.org/sites/default/files/default_book_cover_2015.jpg'
 
+        const title = encodeURIComponent(bookTitle) // URI safe string
+
         FileSystem.downloadAsync(
             uri,
-            `${FileSystem.documentDirectory}${bookTitle}.png`
+            `${FileSystem.documentDirectory}${title}.png`
         ).then(({ uri }) => {
             console.log("Finished downloading to " + uri)
         }).catch(error => {
@@ -50,7 +52,7 @@ const ManualNewBookScreen = ({ navigation }) => {
             isbn: '',
             datePublished: null,
             dateCreated: dateCreated,
-            cover: `${FileSystem.documentDirectory}${bookTitle}.png`,
+            cover: `${FileSystem.documentDirectory}${title}.png`,
             hasRead: hasRead,
         }
         return book
