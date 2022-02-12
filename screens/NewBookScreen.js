@@ -67,6 +67,7 @@ const NewBookScreen = ({ route, navigation }) => {
 
     const prepareBook = async () => {
 
+        console.log(bookTitle)
         let bookId = await getBookByISBN(isbn);
         if (bookId != null) {
             return null
@@ -77,9 +78,11 @@ const NewBookScreen = ({ route, navigation }) => {
     
         let uri = hasImage ? data.imageLinks.thumbnail : 'https://islandpress.org/sites/default/files/default_book_cover_2015.jpg'
         // Download to phone (move into own method???)
+
+        let title = encodeURIComponent(bookTitle)
         FileSystem.downloadAsync(
             uri,
-            `${FileSystem.documentDirectory}${bookTitle}.png`
+            `${FileSystem.documentDirectory}${title}.png`
         ).then(({ uri }) => {
             console.log("Finished downloading to " + uri)
         }).catch(error => {
@@ -93,7 +96,7 @@ const NewBookScreen = ({ route, navigation }) => {
             isbn: isbn, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
-            cover: `${FileSystem.documentDirectory}${bookTitle}.png`,
+            cover: `${FileSystem.documentDirectory}${title}.png`,
             hasRead: hasRead,
         }
         return book
