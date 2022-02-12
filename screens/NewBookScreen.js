@@ -49,12 +49,6 @@ const NewBookScreen = ({ route, navigation }) => {
 
     const toggleHasRead = () => setHasRead(!hasRead)
 
-    const populateGenreList = async () => {
-        const list = await getAllGenres()
-        setGenreList(list)
-        setIsLoading(false)
-    }
-
     const addBook = async () => {
         let book = await prepareBook()
         if (book != null) {

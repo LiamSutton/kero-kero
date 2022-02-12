@@ -84,6 +84,7 @@ const Tabs = () => {
                 component={ScanBookScreen}
                 options={{
                     tabBarShowLabel: false,
+                    unmountOnBlur: true,
                     tabBarIcon: ({ focused }) => {
                         return <Ionicons style={{}}
                             name={'camera'}
