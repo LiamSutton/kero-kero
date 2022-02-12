@@ -23,7 +23,7 @@ const ScanBookScreen = ({ navigation }) => {
     }
 
     const handleManualEntryNavigation = () => {
-        navigation.navigate("Manual Entry")
+        navigation.navigate("Manually Enter ISBN")
     }
 
     if (hasPermission === null) {

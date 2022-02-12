@@ -12,7 +12,7 @@ const ManualEntryScreen = ({ navigation }) => {
     }
 
     const addBookWithoutIsbn = () => {
-        navigation.navigate("Manual New Book")
+        navigation.navigate("Manually Add New Book")
     }
 
     return (
