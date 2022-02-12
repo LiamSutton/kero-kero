@@ -192,7 +192,7 @@ const Styles = StyleSheet.create({
     },
     bookThumbmail: {
         height: 300,
-        width: 250,
+        width: 200,
         alignSelf: 'center',
         marginBottom: 25,
     },
