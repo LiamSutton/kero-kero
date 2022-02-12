@@ -298,7 +298,8 @@ export const getAllBooks = () => {
                 `SELECT books.id, books.title, books.genreId, authors.name as 'author', genres.name as 'genre', books.cover, books.hasRead
                  FROM books
                     JOIN authors on authors.id = books.authorId
-                    JOIN genres on genres.id = books.genreId`,
+                    JOIN genres on genres.id = books.genreId
+                 ORDER BY author, title`,
                 [],
                 (tx, results) => {
                     let response = results.rows._array
