@@ -31,15 +31,8 @@ const BookList = (props) => {
         selectedBook.genre = genres.find((genre) => genre.id == bookGenreId).name // TODO: maybe make genres a dict? map id -> name?
         selectedBook.hasRead = bookHasRead
         let updatedBook = await updateBook(selectedBook);
-        console.log(updatedBook)
-        let toast = await Toast.show('Updated book. 🚀', Toast.durations.SHORT);
-        
-        setModalVisible(!modalVisible)
-    }
 
-    const yeetBook  = async () => {
-        let deletedBook = await deleteBook(selectedBook.id)
-        let toast = await Toast.show("Deleted Book. 😡", Toast.durations.SHORT)
+        let toast = await Toast.show('Updated book. 🚀', Toast.durations.SHORT);
         
         setModalVisible(!modalVisible)
     }
@@ -58,7 +51,6 @@ const BookList = (props) => {
                         <TextInput 
                             style={Styles.textInputDark}
                             onChangeText={(text) => {
-                                    console.log(text)
                                     setBookTitle(text)
                                 }
                             }
@@ -85,11 +77,6 @@ const BookList = (props) => {
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Save Changes</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={Styles.modalButtonsContainer}>
-                            <TouchableOpacity style={Styles.deleteBookModalButton} onPress={yeetBook}>
-                                <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Delete Book</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
                 </View>
             </Modal>
@@ -100,7 +87,6 @@ const BookList = (props) => {
                 renderItem={({item}) => {
                     return(
                         <TouchableOpacity onPress={() => {
-                            console.log(item)
                             setSelectedBook(item)
                             setBookTitle(item.title)
                             setBookHasRead(item.hasRead)

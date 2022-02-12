@@ -13,16 +13,12 @@ const App = () => {
       const isFirstLaunch = await AsyncStorage.getItem('@is_first_launch')
 
       if (isFirstLaunch == null) {
-
-        console.log("FIRST TIME LAUNCH")
         const jsonValue = JSON.stringify(false)
         await AsyncStorage.setItem('@is_first_launch', jsonValue)
         createAuthorsTable()
         createGenresTable()
         createBooksTable()
         populateGenresTable()
-      } else {
-        console.log("App has been launched before")
       }
     })()
   }, [])

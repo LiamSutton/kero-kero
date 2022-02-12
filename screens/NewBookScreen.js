@@ -86,7 +86,6 @@ const NewBookScreen = ({ route, navigation }) => {
         }
         const authorName = data.authors[0]
         let authorId = await handleAuthor(authorName)
-        console.log(authorId);
         const dateCreated = dayjs().format("YYYY-MM-DD")
     
         let uri = hasImage ? data.imageLinks.thumbnail : 'https://islandpress.org/sites/default/files/default_book_cover_2015.jpg'

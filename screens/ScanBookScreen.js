@@ -17,10 +17,8 @@ const ScanBookScreen = ({ navigation }) => {
 
     const handleBarcodeScanned = ({ type, data }) => {
         setScanned(true)
-        console.log(data)
         navigation.navigate("New Book", {
-            // route params
-            isbn: data
+            isbn: data  // route params
         })
     }
 

@@ -257,7 +257,6 @@ export const insertBook = (book) => {
                 "INSERT INTO books (title, authorId, genreId, isbn, datePublished, dateCreated, cover, hasRead) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 [book.title, book.authorId, book.genreId, book.isbn, book.datePublished, book.dateCreated, book.cover, book.hasRead],
                 (tx, results) => {
-                    console.log(tx)
                     let response = null
                     if (results.insertId != null) {
                         response = results.insertId
@@ -319,32 +318,10 @@ export const updateBook = (book) => {
                 "UPDATE books SET title = ?, genreId = ?, hasRead = ?  WHERE id = ?;",
                 [book.title, book.genreId, book.hasRead, book.id],
                 (tx, results) => {
-                    console.log(tx)
-                    console.log(results)
                     let response = true
                     resolve(response)
                 },
                 (tx, error) => console.error(error)
-            )
-        })
-    })
-}
-
-
-export const deleteBook = (id) => {
-    return new Promise((resolve) => {
-        const db = getConnection()
-        db.transaction(tx => {
-            tx.executeSql(
-                `DELETE FROM books WHERE id = ?`,
-                [id],
-                (tx, results) => {
-                    let response = results.rowsAffected
-                    resolve(response)
-                },
-                (tx, error) => {
-                    console.error(error)
-                }
             )
         })
     })
