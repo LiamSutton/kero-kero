@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { SafeAreaView, Text, Image, View, TouchableOpacity, Switch } from 'react-native'
+import { SafeAreaView, Text, Image, View, TouchableOpacity, Switch, TextInput } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { NavigationContainer } from '@react-navigation/native'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -16,6 +16,7 @@ const NewBookScreen = ({ route, navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
+    const [bookTitle, setBookTitle] = useState('')
     const [validResponse, setValidResponse] = useState()
     const [hasImage, setHasImage] = useState(false)
     const [hasRead, setHasRead] = useState(false)
@@ -29,6 +30,7 @@ const NewBookScreen = ({ route, navigation }) => {
 
                     if (json.totalItems == 1) { // exactly one match found
                         setValidResponse(true)
+                        setBookTitle(json.items[0].volumeInfo.title)
                         setData(json.items[0].volumeInfo)
                         if (json.items[0].volumeInfo.hasOwnProperty("imageLinks")) {
                             setHasImage(true)
@@ -46,15 +48,6 @@ const NewBookScreen = ({ route, navigation }) => {
     }, []);
 
     const toggleHasRead = () => setHasRead(!hasRead)
-
-    const fetchBookDetails = async () => {
-        fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
-            .then((response) => response.json())
-            .then((json) => {
-                setData(json.items[0].volumeInfo)
-            })
-            .catch((error) => console.log(error))
-    }
 
     const populateGenreList = async () => {
         const list = await getAllGenres()
@@ -92,7 +85,7 @@ const NewBookScreen = ({ route, navigation }) => {
         // Download to phone (move into own method???)
         FileSystem.downloadAsync(
             uri,
-            `${FileSystem.documentDirectory}${data.title}.png`
+            `${FileSystem.documentDirectory}${bookTitle}.png`
         ).then(({ uri }) => {
             console.log("Finished downloading to " + uri)
         }).catch(error => {
@@ -100,13 +93,13 @@ const NewBookScreen = ({ route, navigation }) => {
         })
 
         let book = {
-            title: data.title,
+            title: bookTitle,
             authorId: authorId,
             genreId: genre,
             isbn: isbn, // TODO: make sure to change this when using the barcode scanner
             datePublished: data.publishedDate,
             dateCreated: dateCreated,
-            cover: `${FileSystem.documentDirectory}${data.title}.png`,
+            cover: `${FileSystem.documentDirectory}${bookTitle}.png`,
             hasRead: hasRead,
         }
         return book
@@ -145,9 +138,15 @@ const NewBookScreen = ({ route, navigation }) => {
                           />
                         }
                         <View style={Styles.bookTextContainer}>
-                            <Text style={Styles.titleTextDark}>
-                                {data.title}
-                            </Text>
+                            <TextInput style={Styles.textInputDark}
+                           value={bookTitle}
+                           onChangeText={(text) => {
+                                    setBookTitle(text)
+                                 }
+                            }
+                            >
+
+                            </TextInput>
                             <Text style={Styles.textDark}>
                                 {data.authors}
                             </Text>
@@ -274,7 +273,14 @@ const Styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         backgroundColor: '#212121',
-    }
+    },
+    textInputDark: {
+        height: 40,
+        minWidth: 150,
+        borderWidth: 1,
+        color: 'white',
+        backgroundColor: '#181818'
+    },
 })
 
 const NavigateToHome = () => {
