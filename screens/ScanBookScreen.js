@@ -40,10 +40,13 @@ const ScanBookScreen = ({ navigation }) => {
                 onBarCodeScanned={scanned ? undefined : handleBarcodeScanned}
                 style={StyleSheet.absoluteFillObject}
             />
+            <Text style={Styles.overlayText}>
+                Add Manually
+            </Text>
             <Ionicons
-                style={{position: 'absolute', bottom: 25, alignSelf: 'flex-end'}}
+                style={{position: 'absolute', bottom: 25, right: 25, alignSelf: 'flex-end'}}
                 name={'add-circle'}
-                size={125}
+                size={75}
                 color={'#01579b'}
                 onPress={handleManualEntryNavigation}
             />
@@ -57,7 +60,17 @@ const Styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#1A1A1A',
-    }
+    },
+
+    overlayText: {
+        fontWeight: 'bold',
+        color: 'white',
+        position: 'absolute',
+        bottom: 100,
+        fontSize: 20,
+        right: 5,
+        alignSelf: 'flex-end',
+    },
 })
 
 export default ScanBookScreen;
