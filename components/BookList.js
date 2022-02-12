@@ -37,13 +37,6 @@ const BookList = (props) => {
         setModalVisible(!modalVisible)
     }
 
-    const yeetBook  = async () => {
-        let deletedBook = await deleteBook(selectedBook.id)
-        let toast = await Toast.show("Deleted Book. 😡", Toast.durations.SHORT)
-        
-        setModalVisible(!modalVisible)
-    }
-
     return(
         <View style={Styles.container}>
             <Modal
@@ -82,11 +75,6 @@ const BookList = (props) => {
                             </TouchableOpacity>
                             <TouchableOpacity style={Styles.saveChangesModalButton} onPress={editBook}>
                                 <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Save Changes</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={Styles.modalButtonsContainer}>
-                            <TouchableOpacity style={Styles.deleteBookModalButton} onPress={yeetBook}>
-                                <Text style={{textAlignVertical: 'center', color: 'white', textAlign: 'center'}}>Delete Book</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
