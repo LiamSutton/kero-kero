@@ -231,8 +231,8 @@ const Styles = StyleSheet.create({
         color: 'white',
     },
     bookThumbnail: {
-        height: 200,
-        width: 150,
+        height: 250,
+        width: 175,
     },
 
     touchableButton: {
