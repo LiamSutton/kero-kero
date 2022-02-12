@@ -16,6 +16,7 @@ const NewBookScreen = ({ route, navigation }) => {
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
+    const [validResponse, setValidResponse] = useState()
     const [hasImage, setHasImage] = useState(false)
     const [hasRead, setHasRead] = useState(false)
     const [genreList, setGenreList] = useState([{ id: '1', name: 'Action' }])
@@ -25,10 +26,16 @@ const NewBookScreen = ({ route, navigation }) => {
             fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
                 .then((response) => response.json())
                 .then((json) => {
-                    if (json.items[0].volumeInfo.hasOwnProperty("imageLinks")) {
-                        setHasImage(true)
+
+                    if (json.totalItems == 1) { // exactly one match found
+                        setValidResponse(true)
+                        setData(json.items[0].volumeInfo)
+                        if (json.items[0].volumeInfo.hasOwnProperty("imageLinks")) {
+                            setHasImage(true)
+                        }
+                    } else {
+                        setValidResponse(false)
                     }
-                    setData(json.items[0].volumeInfo)
                 }).finally(async () => {
                     const list = await getAllGenres()
                     setGenreList(list)
@@ -123,6 +130,7 @@ const NewBookScreen = ({ route, navigation }) => {
     return (
         <SafeAreaView style={Styles.containerDark}>
             {
+                validResponse ?
                 isLoading ? <Text>Loading...</Text> :
                     <View style={Styles.bookContainer}>
                         {
@@ -149,9 +157,19 @@ const NewBookScreen = ({ route, navigation }) => {
                             </Text>
                         </View>
                     </View>
+                    :
+                     <View style={Styles.bookTextContainer}>
+                         <Text style={Styles.textDark}>
+                             Unable to find a book matching ISBN: {isbn}.
+                         </Text>
+                         <Text style={Styles.textDark}>
+                            Possible reasons: the API doesnt have this book, the scan was incorrect or the ISBN was entered wrong
+                         </Text>
+                    </View>
             }
 
             {
+                validResponse ?
                 isLoading ? <Text>Loading Genres...</Text> :
                     <View style={Styles.genrePickerContainer}>
                         <Picker style={Styles.genrePicker} dropdownIconColor={'#FFFFFF'} itemStyle={Styles.genrePickerItem} selectedValue={genre} onValueChange={(itemValue, itemIndex) => setGenre(itemValue)}>
@@ -162,16 +180,27 @@ const NewBookScreen = ({ route, navigation }) => {
                             }
                         </Picker>
                     </View>
+                : <Text></Text>
             }
 
-            <View style={Styles.hasReadContainer}>
+           {
+               validResponse ?
+               <View style={Styles.hasReadContainer}>
                 <Text style={[Styles.textDark, { marginLeft: 10 }]}>Has Read?</Text>
                 <Switch style={{ paddingLeft: 25 }} value={hasRead} onValueChange={toggleHasRead}></Switch>
-            </View>
+               </View>
+               : <Text></Text>
+           }
 
-            <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
-                <Text style={{ textAlignVertical: 'center', color: 'white', textAlign: 'center', paddingTop: 5 }}>Add Book</Text>
-            </TouchableOpacity>
+          {
+              validResponse ?
+              <TouchableOpacity style={Styles.touchableButton} onPress={addBook}>
+              <Text style={{ textAlignVertical: 'center', color: 'white', textAlign: 'center', paddingTop: 5 }}>Add Book</Text>
+             </TouchableOpacity>
+             : <Text></Text>
+          }  
+
+           
         </SafeAreaView>
     )
 }
