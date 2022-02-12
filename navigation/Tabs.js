@@ -95,7 +95,7 @@ const Tabs = () => {
                 }}
             />
             <Tab.Screen
-                name='Manual Entry'
+                name='Manually Enter ISBN'
                 component={ManualEntryScreen}
                 options={{
                     tabBarShowLabel: false,
@@ -105,7 +105,7 @@ const Tabs = () => {
             />
 
             <Tab.Screen
-                name='Manual New Book'
+                name='Manually Add New Book'
                 component={ManualNewBookScreen}
                 options={{
                     tabBarShowLabel: false,
