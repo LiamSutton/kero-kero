@@ -98,8 +98,8 @@ const ManualNewBookScreen = ({ navigation }) => {
                             onChangeText={(text) => {
                                 setBookAuthorName(text)
                                 }
-                            } >
-
+                            }
+                         >
                         </TextInput>
                     </View>
                 </View>

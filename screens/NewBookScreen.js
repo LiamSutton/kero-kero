@@ -17,6 +17,7 @@ const NewBookScreen = ({ route, navigation }) => {
     const [data, setData] = useState([])
     const [genre, setGenre] = useState(1)
     const [bookTitle, setBookTitle] = useState('')
+    const [bookAuthorName, setBookAuthorName] = useState('')
     const [validResponse, setValidResponse] = useState()
     const [hasImage, setHasImage] = useState(false)
     const [hasRead, setHasRead] = useState(false)
@@ -31,6 +32,7 @@ const NewBookScreen = ({ route, navigation }) => {
                     if (json.totalItems == 1) { // exactly one match found
                         setValidResponse(true)
                         setBookTitle(json.items[0].volumeInfo.title)
+                        setBookAuthorName(json.items[0].volumeInfo.authors[0])
                         setData(json.items[0].volumeInfo)
                         if (json.items[0].volumeInfo.hasOwnProperty("imageLinks")) {
                             setHasImage(true)
@@ -72,7 +74,7 @@ const NewBookScreen = ({ route, navigation }) => {
         if (bookId != null) {
             return null
         }
-        const authorName = data.authors[0]
+        const authorName = bookAuthorName
         let authorId = await handleAuthor(authorName)
         const dateCreated = dayjs().format("YYYY-MM-DD")
     
@@ -144,9 +146,15 @@ const NewBookScreen = ({ route, navigation }) => {
                             >
 
                             </TextInput>
-                            <Text style={Styles.textDark}>
-                                {data.authors}
-                            </Text>
+    
+                            <TextInput style={Styles.textInputDark}
+                            value={bookAuthorName}
+                            onChangeText={(text) => {
+                                setBookAuthorName(text)
+                                }
+                            }
+                         >
+                        </TextInput>
                             <Text style={Styles.textDark}>
                                 {dayjs(data.publishedDate).format("DD/MM/YYYY")}
                             </Text>
@@ -274,6 +282,7 @@ const Styles = StyleSheet.create({
     textInputDark: {
         height: 40,
         minWidth: 150,
+        marginBottom: 10,
         borderWidth: 1,
         color: 'white',
         backgroundColor: '#181818'
